@@ -5,6 +5,7 @@ class Reservation < ApplicationRecord
   validates_numericality_of :number_of_guests, greater_than: 0, less_than_or_equal_to: 10
   validate :start_date_is_before_end_date
   validate :chosen_dates_do_not_overlap_with_existent_reservations
+  validate :number_of_guests_does_not_exceed_room_capacity
 
   def duration
     if start_date.present? && end_date.present? && end_date > start_date
@@ -28,9 +29,16 @@ class Reservation < ApplicationRecord
   end
 
   def chosen_dates_do_not_overlap_with_existent_reservations
-    return if room.nil?
+    return if room.blank?
     return if Reservation.where('start_date < ? AND end_date > ? AND room_id = ?', end_date, start_date, room.id).empty?
 
     errors.add(:base, :invalid_dates, message: 'This reservation overlaps with one or more other reservations')
+  end
+
+  def number_of_guests_does_not_exceed_room_capacity
+    return if room.blank? || number_of_guests.blank?
+    return if number_of_guests <= room.capacity
+
+    errors.add(:number_of_guests, :guest_overflow, message: 'The number of guests does not fit in this room')
   end
 end
