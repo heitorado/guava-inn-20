@@ -10,6 +10,6 @@ class Room < ApplicationRecord
   }
 
   scope :unavailable_for_period, ->(query_start_date, query_end_date) {
-    joins(:reservations).where('start_date <=? AND end_date >= ?', query_end_date, query_start_date).uniq
+    joins(:reservations).where('start_date < ? AND end_date > ?', query_end_date, query_start_date).uniq
   }
 end

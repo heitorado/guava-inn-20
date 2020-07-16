@@ -4,6 +4,7 @@ class Reservation < ApplicationRecord
   validates_presence_of :start_date, :end_date, :guest_name, :number_of_guests
   validates_numericality_of :number_of_guests, greater_than: 0, less_than_or_equal_to: 10
   validate :start_date_is_before_end_date
+  validate :chosen_dates_do_not_overlap_with_existent_reservations
 
   def duration
     if start_date.present? && end_date.present? && end_date > start_date
@@ -24,5 +25,12 @@ class Reservation < ApplicationRecord
     if start_date.present? && end_date.present? && start_date >= end_date
       errors.add(:base, :invalid_dates, message: 'The start date should be before the end date')
     end
+  end
+
+  def chosen_dates_do_not_overlap_with_existent_reservations
+    return if room.nil?
+    return if Reservation.where('start_date < ? AND end_date > ? AND room_id = ?', end_date, start_date, room.id).empty?
+
+    errors.add(:base, :invalid_dates, message: 'This reservation overlaps with one or more other reservations')
   end
 end
