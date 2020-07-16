@@ -71,6 +71,82 @@ RSpec.describe Reservation, type: :model do
     expect(reservation).to have_error_on(:base, :invalid_dates)
   end
 
+  it 'validates that a new reservation cannot overlap with any other reservation for the same room' do
+    room = Room.create!(code: '101', capacity: '4')
+    room.reservations.create(
+      start_date: '2020-08-10',
+      end_date: '2020-08-24',
+      guest_name: 'Victor Siqueira',
+      number_of_guests: 3
+    )
+
+    reservation1 = room.reservations.new(
+      start_date: '2020-08-01',
+      end_date: '2020-08-15',
+      guest_name: 'Diego Costa',
+      number_of_guests: 2
+    )
+
+    reservation2 = room.reservations.new(
+      start_date: '2020-08-12',
+      end_date: '2020-08-23',
+      guest_name: 'Ricardo Lima',
+      number_of_guests: 4
+    )
+
+    reservation3 = room.reservations.new(
+      start_date: '2020-08-20',
+      end_date: '2020-08-30',
+      guest_name: 'Alisson Freitas',
+      number_of_guests: 1
+    )
+
+    expect(reservation1).to_not be_valid
+    expect(reservation2).to_not be_valid
+    expect(reservation3).to_not be_valid
+    expect(reservation1).to have_error_on(:base, :invalid_dates)
+    expect(reservation2).to have_error_on(:base, :invalid_dates)
+    expect(reservation3).to have_error_on(:base, :invalid_dates)
+  end
+
+  it 'validates that a reservation can start at the same day another one ends' do
+    room = Room.create!(code: '101', capacity: '4')
+    room.reservations.create(
+      start_date: '2020-08-10',
+      end_date: '2020-08-24',
+      guest_name: 'Juliano Vaz',
+      number_of_guests: 3
+    )
+
+    reservation = room.reservations.new(
+      start_date: '2020-08-24',
+      end_date: '2020-09-05',
+      guest_name: 'Lucas Barros',
+      number_of_guests: 2
+    )
+
+    expect(reservation).to be_valid
+  end
+
+  it 'validates that a reservation can end at the same day another one starts' do
+    room = Room.create!(code: '101', capacity: '4')
+    room.reservations.create(
+      start_date: '2020-10-05',
+      end_date: '2020-10-12',
+      guest_name: 'Paulo Jorge',
+      number_of_guests: 3
+    )
+
+    reservation = room.reservations.new(
+      start_date: '2020-09-24',
+      end_date: '2020-10-05',
+      guest_name: 'Letícia Souza',
+      number_of_guests: 2
+    )
+
+    expect(reservation).to be_valid
+  end
+
   describe '#duration' do
     it 'returns the number of nights for the reservation' do
       reservation = Reservation.new(start_date: '2020-08-01', end_date: '2020-08-05')
