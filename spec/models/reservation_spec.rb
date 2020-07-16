@@ -57,6 +57,14 @@ RSpec.describe Reservation, type: :model do
     expect(room).to have_error_on(:number_of_guests, :less_than_or_equal_to)
   end
 
+  it 'validates that number_of_guests does not exceed room.capacity' do
+    room = Room.new(capacity: 2)
+    reservation = room.reservations.new(number_of_guests: 4)
+
+    expect(reservation).to_not be_valid
+    expect(reservation).to have_error_on(:number_of_guests, :guest_overflow)
+  end
+
   it 'validates that start_date is before end_date' do
     reservation = Reservation.new(start_date: '2020-08-02', end_date: '2020-08-01')
 
