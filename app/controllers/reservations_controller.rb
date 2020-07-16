@@ -1,9 +1,15 @@
 class ReservationsController < ApplicationController
   def search
     @should_show_results = params[:start_date].present? &&
-      params[:end_date].present? &&
-      params[:number_of_guests].present?
-    @available_rooms = @should_show_results ? Room.all : Room.none
+                           params[:end_date].present? &&
+                           params[:number_of_guests].present?
+
+    @available_rooms = if @should_show_results
+                         Room.minimum_capacity_of(params[:number_of_guests]) -
+                           Room.unavailable_for_period(params[:start_date], params[:end_date])
+                       else
+                         Room.none
+                       end
   end
 
   def new
