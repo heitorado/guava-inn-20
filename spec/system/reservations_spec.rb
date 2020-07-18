@@ -37,31 +37,8 @@ RSpec.describe 'Reservations', type: :system do
       visit search_reservations_path
     end
 
-    context 'when start_date is after end_date' do
-      before do
-        expect(page).to have_content('New Reservation')
-
-        within('form') do
-          fill_in 'start_date', with: 7.days.from_now.strftime('%m/%d/%Y')
-          fill_in 'end_date', with: 7.days.ago.strftime('%m/%d/%Y')
-          select '2', from: 'number_of_guests'
-          click_button 'commit'
-        end
-      end
-
-      it 'shows no results' do
-        expect(page).to have_no_content('Available Rooms')
-        expect(page).to have_no_content('101')
-        expect(page).to have_no_content('102')
-        expect(page).to have_no_content('103')
-        expect(page).to have_no_content('104')
-        expect(page).to have_no_content('105')
-        expect(page).to have_no_content('106')
-      end
-
-      it 'returns an error message' do
-        expect(page).to have_content("the 'From' date must happen before the 'To' date")
-      end
+    it 'has a link to go back to the listing' do
+      expect(page).to have_link('Back', href: rooms_path)
     end
 
     it 'allows users to search for available rooms with a given capacity in a period' do
@@ -150,6 +127,78 @@ RSpec.describe 'Reservations', type: :system do
           end
         end
       end
+    end
+
+    context 'when start_date is after end_date' do
+      before do
+        expect(page).to have_content('New Reservation')
+
+        within('form') do
+          fill_in 'start_date', with: 7.days.from_now.strftime('%m/%d/%Y')
+          fill_in 'end_date', with: 7.days.ago.strftime('%m/%d/%Y')
+          select '2', from: 'number_of_guests'
+          click_button 'commit'
+        end
+      end
+
+      it 'shows no results' do
+        expect(page).to have_no_content('Available Rooms')
+        expect(page).to have_no_content('101')
+        expect(page).to have_no_content('102')
+        expect(page).to have_no_content('103')
+        expect(page).to have_no_content('104')
+        expect(page).to have_no_content('105')
+        expect(page).to have_no_content('106')
+      end
+
+      it 'returns an error message' do
+        expect(page).to have_content("the 'From' date must happen before the 'To' date")
+      end
+    end
+  end
+
+  describe 'new reservation' do
+    before do
+      @room = Room.create!(code: '101', capacity: 2)
+
+      visit search_reservations_path
+
+      within('form') do
+        fill_in 'start_date', with: '08/14/2020'
+        fill_in 'end_date', with: '08/22/2020'
+        select '2', from: 'number_of_guests'
+        click_button 'commit'
+      end
+
+      @search_url = current_url
+
+      within('table tbody tr:first-child') do
+        click_link 'Create Reservation'
+      end
+    end
+
+    it 'allows users to create a new reservation with the same parameters specified on the search' do
+      expect(page).to have_content("New Reservation for Room #{@room.code}")
+      expect(page).to have_selector('input#reservation_start_date[value="2020-08-14"]')
+      expect(page).to have_selector('input#reservation_end_date[value="2020-08-22"]')
+      expect(page).to have_selector('select#reservation_number_of_guests option[selected][value="2"]')
+
+      fill_in 'reservation_guest_name', with: 'Heitor Carvalho'
+      click_button 'commit'
+
+      expect(page).to have_content('was successfully created.')
+      expect(page).to have_content('101-')
+      expect(page).to have_content('2020-08-14 to 2020-08-22')
+      expect(page).to have_content('Heitor Carvalho')
+    end
+
+    it 'has a link to go back to the search' do
+      expect(page).to have_link('Back', href: @search_url)
+    end
+
+    it 'shows an error message when there is a validation error' do
+      click_button 'commit'
+      expect(page).to have_content("can't be blank")
     end
   end
 end
