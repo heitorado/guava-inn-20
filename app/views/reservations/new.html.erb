@@ -1,4 +1,8 @@
-<h2>New Reservation</h2>
+<% if @room %>
+  <h2>New Reservation for Room <%= @reservation.room.code %></h2>
+<% else %>
+  <h2>New Reservation</h2>
+<% end %>
 
 <%= form_with(model: @reservation, local: true) do |form| %>
   <% if @reservation.errors.any? %>
@@ -28,10 +32,16 @@
     <%= form.select :number_of_guests, options_for_select(1..10, params.dig(:reservation, :number_of_guests)) %>
   </div>
 
-  <div class="field">
-    <%= form.label :room_id %>
-    <%= form.select :room_id, options_from_collection_for_select(Room.all, :id, :code) %>
-  </div>
+  <% if @room %>
+    <div class="field">
+      <%= form.hidden_field :room_id %>
+    </div>
+  <% else %>
+    <div class="field">
+      <%= form.label :room_id %>
+      <%= form.select :room_id, options_from_collection_for_select(Room.all, :id, :code) %>
+    </div>
+  <% end %>
 
   <div class="field">
     <%= form.label :guest_name %>
