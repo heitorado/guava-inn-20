@@ -55,7 +55,7 @@ RSpec.describe 'Rooms', type: :system do
         within('thead') do
           expect(page).to have_content('Code')
           expect(page).to have_content('Capacity')
-          expect(page).to have_content('Occupation')
+          expect(page).to have_content('Occupancy')
           expect(page).to have_content('Actions')
         end
 
@@ -198,8 +198,8 @@ RSpec.describe 'Rooms', type: :system do
       expect(page).to have_content('Room 147')
       expect(page).to have_content('Code: 147')
       expect(page).to have_content('Capacity: 4')
-      expect(page).to have_content('Occupation Rate (Week): 100%')
-      expect(page).to have_content('Occupation Rate (Month): 30%')
+      expect(page).to have_content('Occupancy Rate (Week): 100%')
+      expect(page).to have_content('Occupancy Rate (Month): 30%')
       expect(page).to have_content('Notes: Sparkling clean')
 
       within('table') do
