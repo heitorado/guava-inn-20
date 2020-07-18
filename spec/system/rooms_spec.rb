@@ -7,8 +7,35 @@ RSpec.describe 'Rooms', type: :system do
 
   describe 'listing' do
     before do
-      Room.create!(code: '101', capacity: 1)
-      Room.create!(code: '102', capacity: 5)
+      room = Room.create!(code: '101', capacity: 1)
+      room.reservations.create!(
+        start_date: Date.yesterday,
+        end_date: 5.days.from_now,
+        guest_name: 'Rossiny Reis',
+        number_of_guests: 1
+      )
+
+      room = Room.create!(code: '102', capacity: 5)
+      room.reservations.create!(
+        start_date: 12.days.from_now,
+        end_date: 22.days.from_now,
+        guest_name: 'Marina Orico',
+        number_of_guests: 4
+      )
+
+      room = Room.create!(code: '103', capacity: 3)
+      room.reservations.create!(
+        start_date: Date.tomorrow,
+        end_date: 7.days.from_now,
+        guest_name: 'Ítalo Barbosa',
+        number_of_guests: 2
+      )
+      room.reservations.create!(
+        start_date: 8.days.from_now,
+        end_date: 17.days.from_now,
+        guest_name: 'Letícia Souza',
+        number_of_guests: 3
+      )
     end
 
     it 'shows all rooms in the system with their respective details' do
@@ -16,24 +43,45 @@ RSpec.describe 'Rooms', type: :system do
 
       expect(page).to have_content('Rooms')
 
+      within('#week-global-occupancy') do
+        expect(page).to have_content('47%')
+      end
+
+      within('#month-global-occupancy') do
+        expect(page).to have_content('32%')
+      end
+
       within('table') do
         within('thead') do
           expect(page).to have_content('Code')
           expect(page).to have_content('Capacity')
-          expect(page).to have_content('Occupation')
+          expect(page).to have_content('Occupancy')
           expect(page).to have_content('Actions')
         end
 
         within('tbody tr:first-child') do
           expect(page).to have_content('101')
           expect(page).to have_content('1 person')
+          expect(page).to have_content('57%')
+          expect(page).to have_content('13%')
           expect(page).to have_link('Show', href: room_path(Room.first.id))
           expect(page).to have_link('Edit', href: edit_room_path(Room.first.id))
         end
 
-        within('tbody tr:last-child') do
+        within('tbody tr:nth-child(2)') do
           expect(page).to have_content('102')
           expect(page).to have_content('5 people')
+          expect(page).to have_content('0%')
+          expect(page).to have_content('33%')
+          expect(page).to have_link('Show', href: room_path(Room.second.id))
+          expect(page).to have_link('Edit', href: edit_room_path(Room.second.id))
+        end
+
+        within('tbody tr:last-child') do
+          expect(page).to have_content('103')
+          expect(page).to have_content('3 people')
+          expect(page).to have_content('85%')
+          expect(page).to have_content('50%')
           expect(page).to have_link('Show', href: room_path(Room.last.id))
           expect(page).to have_link('Edit', href: edit_room_path(Room.last.id))
         end
@@ -43,7 +91,7 @@ RSpec.describe 'Rooms', type: :system do
     it 'allows users to delete a room' do
       visit rooms_path
 
-      expect(page).to have_selector('table tbody tr', count: 2)
+      expect(page).to have_selector('table tbody tr', count: 3)
 
       within('table tbody tr:first-child') do
         accept_alert do
@@ -51,7 +99,7 @@ RSpec.describe 'Rooms', type: :system do
         end
       end
 
-      expect(page).to have_selector('table tbody tr', count: 1)
+      expect(page).to have_selector('table tbody tr', count: 2)
       expect(page).to have_content('Room was successfully destroyed')
     end
 
@@ -70,11 +118,22 @@ RSpec.describe 'Rooms', type: :system do
     context 'when there are no rooms' do
       before do
         Room.destroy_all
+        visit rooms_path
+      end
+
+      it 'shows zero percent global week occupancy rate' do
+        within('#week-global-occupancy') do
+          expect(page).to have_content('0%')
+        end
+      end
+
+      it 'shows zero percent global month occupancy rate' do
+        within('#month-global-occupancy') do
+          expect(page).to have_content('0%')
+        end
       end
 
       it 'shows an empty listing' do
-        visit rooms_path
-
         within('table') do
           expect(page).to have_content('There are no rooms')
         end
@@ -115,21 +174,21 @@ RSpec.describe 'Rooms', type: :system do
       @room = Room.create!(
         code: '147',
         capacity: '4',
-        notes: 'Sparkling clean',
+        notes: 'Sparkling clean'
       )
       @room.reservations.create(
         id: 1,
-        start_date: '2020-08-02',
-        end_date: '2020-08-10',
+        start_date: Date.tomorrow,
+        end_date: 9.days.from_now,
         guest_name: 'João Santana',
-        number_of_guests: 1,
+        number_of_guests: 1
       )
       @room.reservations.create(
         id: 2,
-        start_date: '2020-08-11',
-        end_date: '2020-08-12',
+        start_date: 10.days.from_now,
+        end_date: 11.days.from_now,
         guest_name: 'Carolina dos Anjos',
-        number_of_guests: 3,
+        number_of_guests: 3
       )
     end
 
@@ -139,6 +198,8 @@ RSpec.describe 'Rooms', type: :system do
       expect(page).to have_content('Room 147')
       expect(page).to have_content('Code: 147')
       expect(page).to have_content('Capacity: 4')
+      expect(page).to have_content('Occupancy Rate (Week): 100%')
+      expect(page).to have_content('Occupancy Rate (Month): 30%')
       expect(page).to have_content('Notes: Sparkling clean')
 
       within('table') do
@@ -153,7 +214,7 @@ RSpec.describe 'Rooms', type: :system do
 
         within('tbody tr:first-child') do
           expect(page).to have_content('147-01')
-          expect(page).to have_content('2020-08-02 to 2020-08-10')
+          expect(page).to have_content("#{@room.reservations.first.start_date} to #{@room.reservations.first.end_date}")
           expect(page).to have_content('8 nights')
           expect(page).to have_content('João Santana')
           expect(page).to have_content('1 guest')
@@ -161,7 +222,7 @@ RSpec.describe 'Rooms', type: :system do
 
         within('tbody tr:last-child') do
           expect(page).to have_content('147-02')
-          expect(page).to have_content('2020-08-11 to 2020-08-12')
+          expect(page).to have_content("#{@room.reservations.second.start_date} to #{@room.reservations.second.end_date}")
           expect(page).to have_content('1 night')
           expect(page).to have_content('Carolina dos Anjos')
           expect(page).to have_content('3 guests')
