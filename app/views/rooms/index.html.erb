@@ -2,7 +2,7 @@
 
 <section class="global-occupation">
   <h2>Global Occupation</h2>
-  <div class="global-occupation-box">
+  <div class="global-occupation-box" id="week-global-occupancy">
     <h3>Week</h3>
     <span class="global-occupation-rate">
       <%= @week_global_occupancy_rate %>%
@@ -12,7 +12,10 @@
   </div>
   <div class="global-occupation-box">
     <h3>Month</h3>
-    <span class="global-occupation-rate">25%</span><br/>
+    <span class="global-occupation-rate" id="month-global-occupancy">
+      <%= @month_global_occupancy_rate %>%
+    </span>
+    <br/>
     <small>in the next 30 days</small>
   </div>
 </section>

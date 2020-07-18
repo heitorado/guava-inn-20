@@ -3,6 +3,9 @@ class RoomsController < ApplicationController
 
   def index
     @rooms = Room.all
+
+    @month_global_occupancy_rate = @rooms.map(&:month_occupancy_rate).sum / (@rooms.count.nonzero? || 1)
+    @week_global_occupancy_rate = @rooms.map(&:week_occupancy_rate).sum / (@rooms.count.nonzero? || 1)
   end
 
   def show
@@ -39,6 +42,7 @@ class RoomsController < ApplicationController
   end
 
   private
+
     def set_room
       @room = Room.find(params[:id])
     end
