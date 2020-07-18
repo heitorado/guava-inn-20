@@ -43,11 +43,11 @@ class RoomsController < ApplicationController
 
   private
 
-    def set_room
-      @room = Room.find(params[:id])
-    end
+  def set_room
+    @room = Room.find(params[:id])
+  end
 
-    def room_params
-      params.require(:room).permit(:code, :capacity, :notes)
-    end
+  def room_params
+    params.require(:room).permit(:code, :capacity, :notes)
+  end
 end
