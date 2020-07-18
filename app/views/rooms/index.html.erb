@@ -4,7 +4,10 @@
   <h2>Global Occupation</h2>
   <div class="global-occupation-box">
     <h3>Week</h3>
-    <span class="global-occupation-rate">50%</span><br/>
+    <span class="global-occupation-rate">
+      <%= @week_global_occupancy_rate %>%
+    </span>
+    <br/>
     <small>in the next 7 days</small>
   </div>
   <div class="global-occupation-box">
@@ -33,8 +36,8 @@
           <tr>
             <td><%= room.code %></td>
             <td><%= pluralize(room.capacity, 'person', 'people') %></td>
-            <td>50%</td>
-            <td>25%</td>
+            <td><%= room.week_occupancy_rate %>%</td>
+            <td><%= room.month_occupancy_rate %>%</td>
             <td><%= link_to 'Show', room %></td>
             <td><%= link_to 'Edit', edit_room_path(room) %></td>
             <td><%= link_to 'Destroy', room, method: :delete, data: { confirm: 'Are you sure?' } %></td>

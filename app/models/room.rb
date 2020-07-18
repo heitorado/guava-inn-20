@@ -5,6 +5,9 @@ class Room < ApplicationRecord
   validates_uniqueness_of :code
   validates_numericality_of :capacity, greater_than: 0, less_than_or_equal_to: 10
 
+  after_find :calculate_occupancy_rates
+  attr_reader :week_occupancy_rate, :month_occupancy_rate
+
   scope :minimum_capacity_of, ->(guests) {
     where('capacity >= ?', guests)
   }
@@ -39,5 +42,12 @@ class Room < ApplicationRecord
 
     # At last, return the percentual value of occupancy rate (days_occupied/days_observed)
     ((occupied_days / n_days.to_f) * 100).to_i
+  end
+
+  private
+
+  def calculate_occupancy_rates
+    @week_occupancy_rate = occupancy_rate_for_the_next(7)
+    @month_occupancy_rate = occupancy_rate_for_the_next(30)
   end
 end
