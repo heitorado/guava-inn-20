@@ -45,7 +45,7 @@ RSpec.describe Room, type: :model do
   end
 
   describe '#occupancy_rate_for_the_next' do
-    it 'returns an integer number' do
+    it 'always returns an integer number' do
       room = Room.create(code: '101', capacity: 4)
       room.reservations.create(
         start_date: 3.days.ago.to_date,
@@ -59,12 +59,14 @@ RSpec.describe Room, type: :model do
       expect(room.occupancy_rate_for_the_next(159)).to be_an(Integer)
     end
 
-    it 'returns zero if there are no reservations for the room' do
-      room = Room.create(code: '101', capacity: 4)
+    context 'when there are no reservations for the room' do
+      it 'returns zero' do
+        room = Room.create(code: '101', capacity: 4)
 
-      expect(room.occupancy_rate_for_the_next(7)).to be_zero
-      expect(room.occupancy_rate_for_the_next(30)).to be_zero
-      expect(room.occupancy_rate_for_the_next(265)).to be_zero
+        expect(room.occupancy_rate_for_the_next(7)).to be_zero
+        expect(room.occupancy_rate_for_the_next(30)).to be_zero
+        expect(room.occupancy_rate_for_the_next(265)).to be_zero
+      end
     end
 
     describe 'weekly occupancy rate' do
