@@ -80,7 +80,7 @@ RSpec.describe 'Rooms', type: :system do
         within('tbody tr:last-child') do
           expect(page).to have_content('103')
           expect(page).to have_content('3 people')
-          expect(page).to have_content('85%')
+          expect(page).to have_content('86%')
           expect(page).to have_content('50%')
           expect(page).to have_link('Show', href: room_path(Room.last.id))
           expect(page).to have_link('Edit', href: edit_room_path(Room.last.id))

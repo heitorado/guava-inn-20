@@ -130,7 +130,7 @@ RSpec.describe Room, type: :model do
       end
 
       context 'when there are reservations filling up 3 of the next seven days' do
-        it 'calculates 42% occupancy rate' do
+        it 'calculates 43% occupancy rate' do
           room = Room.create(code: '101', capacity: 4)
           room.reservations.create(
             start_date: Date.today,
@@ -145,7 +145,7 @@ RSpec.describe Room, type: :model do
             number_of_guests: 4
           )
 
-          expect(room.occupancy_rate_for_the_next(7)).to eq(42)
+          expect(room.occupancy_rate_for_the_next(7)).to eq(43)
         end
       end
 
@@ -192,7 +192,7 @@ RSpec.describe Room, type: :model do
       end
 
       context 'when there are reservations reservations filling up 24 of the next thirty days' do
-        it 'calculates 96% occupancy rate' do
+        it 'calculates 97% occupancy rate' do
           room = Room.create(code: '101', capacity: 4)
           room.reservations.create(
             start_date: Date.tomorrow,
@@ -219,7 +219,7 @@ RSpec.describe Room, type: :model do
             number_of_guests: 2
           )
 
-          expect(room.occupancy_rate_for_the_next(30)).to eq(96)
+          expect(room.occupancy_rate_for_the_next(30)).to eq(97)
         end
       end
 

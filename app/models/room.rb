@@ -43,7 +43,7 @@ class Room < ApplicationRecord
     occupied_days -= [(current_reservations.last.end_date - rate_end_date) - 1.0, 0].max
 
     # At last, return the percentual value of occupancy rate (days_occupied/days_observed)
-    ((occupied_days / n_days.to_f) * 100).to_i
+    ((occupied_days / n_days.to_f) * 100).round
   end
 
   private
