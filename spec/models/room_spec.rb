@@ -51,6 +51,18 @@ RSpec.describe Room, type: :model do
     expect(room).to have_error_on(:capacity, :less_than_or_equal_to)
   end
 
+  it 'validates length of notes' do
+    room = Room.new(
+      code: '199',
+      capacity: 2,
+      # For generating a random string of 513 length
+      notes: rand(36**513).to_s(36)
+    )
+
+    expect(room).to_not be_valid
+    expect(room).to have_error_on(:notes, :too_long)
+  end
+
   describe '#occupancy_rate_for_the_next' do
     it 'always returns an integer number' do
       room = Room.create(code: '101', capacity: 4)
