@@ -170,7 +170,7 @@ RSpec.describe 'Reservations', type: :system do
         click_button 'commit'
       end
 
-      @search_url = current_url
+      @search_url = URI.parse(current_url).request_uri
 
       within('table tbody tr:first-child') do
         click_link 'Create Reservation'
@@ -206,6 +206,16 @@ RSpec.describe 'Reservations', type: :system do
     it 'shows an error message when there is a validation error' do
       click_button 'commit'
       expect(page).to have_content("can't be blank")
+    end
+
+    context 'when there is more than one failed creation attempt in succession' do
+      it 'has a link that goes back to the last search made' do
+        click_button 'commit'
+        click_button 'commit'
+        click_button 'commit'
+
+        expect(page).to have_link('Back', href: @search_url)
+      end
     end
   end
 end
