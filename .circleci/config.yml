@@ -1,0 +1,52 @@
+version: 2.1
+orbs:
+  ruby: circleci/ruby@1.0.5
+  node: circleci/node@3.0.1
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.7.1-node-browsers
+    executor: ruby/default
+    steps:
+      - checkout
+      - run:
+          name: Which bundler?
+          command: bundle -v
+      - ruby/install-deps
+
+  test:
+    parallelism:
+    docker:
+      - image: circleci/ruby:2.7.1-node-browsers
+        environment:
+          PGHOST: 127.0.0.1
+          PGUSER: guava-inn-circleci
+          PGPASSWORD: ""
+          RAILS_ENV: test
+      - image: circleci/postgres:11-alpine
+        environment:
+          POSTGRES_USER: guava-inn-circleci
+          POSTGRES_DB: guava_inn_test
+          POSTGRES_PASSWORD: ""
+
+    steps:
+      - checkout
+      - ruby/install-deps
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Database setup
+          command: bundle exec rails db:schema:load --trace
+      - ruby/rspec-test
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
