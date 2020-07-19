@@ -1,4 +1,4 @@
-<% if @room %>
+<% if @reservation.room %>
   <h2>New Reservation for Room <%= @reservation.room.code %></h2>
 <% else %>
   <h2>New Reservation</h2>
@@ -29,19 +29,21 @@
 
   <div class="field">
     <%= form.label :number_of_guests %>
-    <%= form.select :number_of_guests, options_for_select(1..10, params.dig(:reservation, :number_of_guests)) %>
+    <% if @reservation.room %>
+      <%= form.select :number_of_guests, options_for_select(1..@reservation.room.capacity, params.dig(:reservation, :number_of_guests)) %>
+    <% else %>
+      <%= form.select :number_of_guests, options_for_select(1..10, params.dig(:reservation, :number_of_guests)) %>
+    <% end %>
   </div>
 
-  <% if @room %>
-    <div class="field">
+  <div class="field">
+    <% if @reservation.room %>
       <%= form.hidden_field :room_id %>
-    </div>
-  <% else %>
-    <div class="field">
+    <% else %>
       <%= form.label :room_id %>
       <%= form.select :room_id, options_from_collection_for_select(Room.all, :id, :code) %>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 
   <div class="field">
     <%= form.label :guest_name %>

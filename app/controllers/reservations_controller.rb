@@ -18,7 +18,6 @@ class ReservationsController < ApplicationController
 
   def new
     @reservation = Reservation.new(reservation_params)
-    @room = params.dig(:reservation, :room_id)
   end
 
   def create
