@@ -1,4 +1,6 @@
 class ReservationsController < ApplicationController
+  after_action :save_last_search_url, only: [:search]
+
   def search
     @should_show_results = params[:number_of_guests].present? &&
                            start_and_end_date_present?
@@ -17,10 +19,12 @@ class ReservationsController < ApplicationController
   end
 
   def new
+    @back_url = session[:last_search_url]
     @reservation = Reservation.new(reservation_params)
   end
 
   def create
+    @back_url = session[:last_search_url]
     @reservation = Reservation.new(reservation_params)
     if @reservation.save
       redirect_to @reservation.room,
@@ -38,6 +42,10 @@ class ReservationsController < ApplicationController
   end
 
   private
+
+  def save_last_search_url
+    session[:last_search_url] = request.fullpath || search_reservations_path
+  end
 
   def start_and_end_date_present?
     params[:start_date].present? && params[:end_date].present?
