@@ -5,6 +5,7 @@ class Room < ApplicationRecord
   validates_uniqueness_of :code
   validates_length_of :code, maximum: 12
   validates_numericality_of :capacity, greater_than: 0, less_than_or_equal_to: 10
+  validates_length_of :notes, maximum: 512
 
   after_find :calculate_occupancy_rates
   attr_reader :week_occupancy_rate, :month_occupancy_rate
