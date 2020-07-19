@@ -159,7 +159,7 @@ RSpec.describe 'Reservations', type: :system do
 
   describe 'new reservation' do
     before do
-      @room = Room.create!(code: '101', capacity: 2)
+      @room = Room.create!(code: '101', capacity: 3)
 
       visit search_reservations_path
 
@@ -190,6 +190,13 @@ RSpec.describe 'Reservations', type: :system do
       expect(page).to have_content('101-')
       expect(page).to have_content('2020-08-14 to 2020-08-22')
       expect(page).to have_content('Heitor Carvalho')
+    end
+
+    it 'shows only options on number of guests up to the room maximum capacity' do
+      expect(page).to have_css('select#reservation_number_of_guests option', count: @room.capacity)
+      expect(page).to have_selector('select#reservation_number_of_guests option[value="1"]')
+      expect(page).to have_selector('select#reservation_number_of_guests option[value="2"]')
+      expect(page).to have_selector('select#reservation_number_of_guests option[value="3"]')
     end
 
     it 'has a link to go back to the search' do
