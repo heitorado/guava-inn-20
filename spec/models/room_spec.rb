@@ -56,7 +56,7 @@ RSpec.describe Room, type: :model do
       code: '199',
       capacity: 2,
       # For generating a random string of 513 length
-      notes: rand(36**513).to_s(36)
+      notes: (0..512).map { [*('a'..'z')].sample }.join
     )
 
     expect(room).to_not be_valid
