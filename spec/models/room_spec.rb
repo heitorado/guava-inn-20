@@ -16,6 +16,13 @@ RSpec.describe Room, type: :model do
     expect(room).to have_error_on(:code, :taken)
   end
 
+  it 'validates length of code' do
+    room = Room.new(code: '01110011-01110011', capacity: 2, notes: 'crying zeros and I am nearing 111')
+
+    expect(room).to_not be_valid
+    expect(room).to have_error_on(:code, :too_long)
+  end
+
   it 'validates presence of capacity' do
     room = Room.new
 
