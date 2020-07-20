@@ -34,6 +34,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.9'
   gem 'rspec_junit_formatter'
   gem 'selenium-webdriver', '~> 3.142'
+  gem 'simplecov', require: false
   gem 'webdrivers'
 end
 
