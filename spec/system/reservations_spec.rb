@@ -7,32 +7,18 @@ RSpec.describe 'Reservations', type: :system do
 
   describe 'searching' do
     before do
-      @room = Room.create!(code: '101', capacity: 2)
-      @room.reservations.create(
-        start_date: '2020-08-01',
-        end_date: '2020-08-15',
-        guest_name: 'Heitor Carvalho',
-        number_of_guests: 1
-      )
-      @room.reservations.create(
-        start_date: '2020-08-15',
-        end_date: '2020-08-30',
-        guest_name: 'Carolina dos Anjos',
-        number_of_guests: 2
-      )
+      create(:room, code: '101', capacity: 2, with_reservations: [
+               { start_date: '2020-08-01', end_date: '2020-08-15' }
+             ])
 
-      Room.create!(code: '102', capacity: 5)
-      Room.create!(code: '103', capacity: 3)
-      Room.create!(code: '104', capacity: 1)
-      Room.create!(code: '105', capacity: 4)
+      create(:room, code: '102', capacity: 5)
+      create(:room, code: '103', capacity: 3)
+      create(:room, code: '104', capacity: 1)
+      create(:room, code: '105', capacity: 4)
 
-      @room = Room.create!(code: '106', capacity: 6)
-      @room.reservations.create(
-        start_date: '2020-08-20',
-        end_date: '2020-08-24',
-        guest_name: 'Diego Costa',
-        number_of_guests: 2
-      )
+      create(:room, code: '106', capacity: 6, with_reservations: [
+               { start_date: '2020-08-20', end_date: '2020-08-24' }
+             ])
 
       visit search_reservations_path
     end
@@ -159,7 +145,7 @@ RSpec.describe 'Reservations', type: :system do
 
   describe 'new reservation' do
     before do
-      @room = Room.create!(code: '101', capacity: 3)
+      @room = create(:room, code: '101', capacity: 3)
 
       visit search_reservations_path
 
