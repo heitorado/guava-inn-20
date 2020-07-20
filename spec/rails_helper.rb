@@ -11,7 +11,14 @@ require 'rspec/rails'
 
 # Codecov integration with circleci
 require 'simplecov'
-SimpleCov.start 'rails'
+SimpleCov.start :rails do
+  enable_coverage :branch
+  # Save to CircleCI's artifacts directory if running on CircleCI
+  if ENV['CIRCLE_ARTIFACTS']
+    dir = File.join(ENV['CIRCLE_ARTIFACTS'], 'coverage')
+    SimpleCov.coverage_dir(dir)
+  end
+end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
