@@ -22,6 +22,58 @@ RSpec.describe Reservation, type: :model do
     expect(reservation).to have_error_on(:end_date, :blank)
   end
 
+  it 'validates that start_date is before end_date' do
+    reservation = build(:reservation, start_date: '2020-08-02', end_date: '2020-08-01')
+
+    expect(reservation).to_not be_valid
+    expect(reservation).to have_error_on(:base, :invalid_dates)
+  end
+
+  it 'validates that start_date is not equal to end_date' do
+    reservation = build(:reservation, start_date: '2020-08-02', end_date: '2020-08-02')
+
+    expect(reservation).to_not be_valid
+    expect(reservation).to have_error_on(:base, :invalid_dates)
+  end
+
+  it 'validates that a new reservation does not overlap with another reservation for the same room' do
+    room = create(:room, capacity: 4, with_reservations: [
+                    { start_date: '2020-08-10', end_date: '2020-08-24' }
+                  ])
+    reservation1 = build(:reservation, start_date: '2020-08-01', end_date: '2020-08-15', room: room)
+    reservation2 = build(:reservation, start_date: '2020-08-12', end_date: '2020-08-23', room: room)
+    reservation3 = build(:reservation, start_date: '2020-08-20', end_date: '2020-08-30', room: room)
+
+    expect(reservation1).to_not be_valid
+    expect(reservation1).to have_error_on(:base, :invalid_dates)
+
+    expect(reservation2).to_not be_valid
+    expect(reservation2).to have_error_on(:base, :invalid_dates)
+
+    expect(reservation3).to_not be_valid
+    expect(reservation3).to have_error_on(:base, :invalid_dates)
+  end
+
+  it 'validates that a reservation can start at the same day another one ends' do
+    room = create(:room, capacity: 4, with_reservations: [
+                    { start_date: '2020-08-10', end_date: '2020-08-24' }
+                  ])
+
+    reservation = build(:reservation, start_date: '2020-08-24', end_date: '2020-09-05', room: room)
+
+    expect(reservation).to be_valid
+  end
+
+  it 'validates that a reservation can end at the same day another one starts' do
+    room = create(:room, capacity: 4, with_reservations: [
+                    { start_date: '2020-10-05', end_date: '2020-10-12' }
+                  ])
+
+    reservation = build(:reservation, start_date: '2020-09-24', end_date: '2020-10-05', room: room)
+
+    expect(reservation).to be_valid
+  end
+
   it 'validates presence of guest_name' do
     reservation = build(:reservation, guest_name: nil)
 
@@ -64,58 +116,6 @@ RSpec.describe Reservation, type: :model do
 
     expect(reservation).to_not be_valid
     expect(reservation).to have_error_on(:number_of_guests, :guest_overflow)
-  end
-
-  it 'validates that start_date is before end_date' do
-    reservation = build(:reservation, start_date: '2020-08-02', end_date: '2020-08-01')
-
-    expect(reservation).to_not be_valid
-    expect(reservation).to have_error_on(:base, :invalid_dates)
-  end
-
-  it 'validates that start_date is not equal to end_date' do
-    reservation = build(:reservation, start_date: '2020-08-02', end_date: '2020-08-02')
-
-    expect(reservation).to_not be_valid
-    expect(reservation).to have_error_on(:base, :invalid_dates)
-  end
-
-  it 'validates that a new reservation does not overlap with other reservation for the same room' do
-    room = create(:room, capacity: 4, with_reservations: [
-                    { start_date: '2020-08-10', end_date: '2020-08-24' }
-                  ])
-    reservation1 = build(:reservation, start_date: '2020-08-01', end_date: '2020-08-15', room: room)
-    reservation2 = build(:reservation, start_date: '2020-08-12', end_date: '2020-08-23', room: room)
-    reservation3 = build(:reservation, start_date: '2020-08-20', end_date: '2020-08-30', room: room)
-
-    expect(reservation1).to_not be_valid
-    expect(reservation1).to have_error_on(:base, :invalid_dates)
-
-    expect(reservation2).to_not be_valid
-    expect(reservation2).to have_error_on(:base, :invalid_dates)
-
-    expect(reservation3).to_not be_valid
-    expect(reservation3).to have_error_on(:base, :invalid_dates)
-  end
-
-  it 'validates that a reservation can start at the same day another one ends' do
-    room = create(:room, capacity: 4, with_reservations: [
-                    { start_date: '2020-08-10', end_date: '2020-08-24' }
-                  ])
-
-    reservation = build(:reservation, start_date: '2020-08-24', end_date: '2020-09-05', room: room)
-
-    expect(reservation).to be_valid
-  end
-
-  it 'validates that a reservation can end at the same day another one starts' do
-    room = create(:room, capacity: 4, with_reservations: [
-                    { start_date: '2020-10-05', end_date: '2020-10-12' }
-                  ])
-
-    reservation = build(:reservation, start_date: '2020-09-24', end_date: '2020-10-05', room: room)
-
-    expect(reservation).to be_valid
   end
 
   describe '#duration' do
