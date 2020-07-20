@@ -7,35 +7,16 @@ RSpec.describe 'Rooms', type: :system do
 
   describe 'listing' do
     before do
-      room = Room.create!(code: '101', capacity: 1)
-      room.reservations.create!(
-        start_date: Date.yesterday,
-        end_date: 5.days.from_now,
-        guest_name: 'Rossiny Reis',
-        number_of_guests: 1
-      )
-
-      room = Room.create!(code: '102', capacity: 5)
-      room.reservations.create!(
-        start_date: 12.days.from_now,
-        end_date: 22.days.from_now,
-        guest_name: 'Marina Orico',
-        number_of_guests: 4
-      )
-
-      room = Room.create!(code: '103', capacity: 3)
-      room.reservations.create!(
-        start_date: Date.tomorrow,
-        end_date: 7.days.from_now,
-        guest_name: 'Ítalo Barbosa',
-        number_of_guests: 2
-      )
-      room.reservations.create!(
-        start_date: 8.days.from_now,
-        end_date: 17.days.from_now,
-        guest_name: 'Letícia Souza',
-        number_of_guests: 3
-      )
+      create(:room, code: '101', capacity: 1, with_reservations: [
+               { start_date: Date.yesterday, end_date: 5.days.from_now }
+             ])
+      create(:room, code: '102', capacity: 5, with_reservations: [
+               { start_date: 12.days.from_now, end_date: 22.days.from_now }
+             ])
+      create(:room, code: '103', capacity: 3, with_reservations: [
+               { start_date: Date.tomorrow, end_date: 7.days.from_now },
+               { start_date: 8.days.from_now, end_date: 17.days.from_now }
+             ])
     end
 
     it 'shows all rooms in the system with their respective details' do
@@ -171,25 +152,18 @@ RSpec.describe 'Rooms', type: :system do
 
   describe 'show room' do
     before do
-      @room = Room.create!(
-        code: '147',
-        capacity: '4',
-        notes: 'Sparkling clean'
-      )
-      @room.reservations.create(
-        id: 1,
-        start_date: Date.tomorrow,
-        end_date: 9.days.from_now,
-        guest_name: 'João Santana',
-        number_of_guests: 1
-      )
-      @room.reservations.create(
-        id: 2,
-        start_date: 10.days.from_now,
-        end_date: 11.days.from_now,
-        guest_name: 'Carolina dos Anjos',
-        number_of_guests: 3
-      )
+      @room = create(:room, code: '147', capacity: 4, notes: 'Sparkling clean', with_reservations: [
+                       { id: 1,
+                         start_date: Date.tomorrow,
+                         end_date: 9.days.from_now,
+                         guest_name: 'João Santana',
+                         number_of_guests: 1 },
+                       { id: 2,
+                         start_date: 10.days.from_now,
+                         end_date: 11.days.from_now,
+                         guest_name: 'Carolina dos Anjos',
+                         number_of_guests: 3 }
+                     ])
     end
 
     it 'shows the details of a room including its reservations' do
@@ -274,7 +248,7 @@ RSpec.describe 'Rooms', type: :system do
 
   describe 'edit room' do
     before do
-      @room = Room.create!(code: '147', capacity: '4')
+      @room = create(:room, code: '147', capacity: '4')
     end
 
     it 'allows users to change attributes of a room' do
