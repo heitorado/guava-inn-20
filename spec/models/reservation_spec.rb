@@ -81,6 +81,13 @@ RSpec.describe Reservation, type: :model do
     expect(reservation).to have_error_on(:guest_name, :blank)
   end
 
+  it 'validates length of guest_name' do
+    reservation = build(:reservation, guest_name: (0..256).map { [*('A'..'z')].sample }.join)
+
+    expect(reservation).to_not be_valid
+    expect(reservation).to have_error_on(:guest_name, :too_long)
+  end
+
   it 'validates presence of number_of_guests' do
     reservation = build(:reservation, number_of_guests: nil)
 
