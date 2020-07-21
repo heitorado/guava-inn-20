@@ -4,6 +4,11 @@ lock '~> 3.14.1'
 set :application, 'guava_inn'
 set :repo_url, 'git@github.com:heitorado/guava-inn-20.git'
 set :branch, 'trunk'
+
+# Symlink config/master.key local with the one on the server
+set :linked_files, %w{config/master.key}
+
+# Rbenv settings
 set :rbenv_type, :user
 set :rbenv_ruby, '2.7.1'
 set :rbenv_prefix, '/usr/bin/rbenv exec'
