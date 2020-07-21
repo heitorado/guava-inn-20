@@ -6,7 +6,19 @@ set :repo_url, 'git@github.com:heitorado/guava-inn-20.git'
 set :branch, 'trunk'
 
 # Symlink config/master.key local with the one on the server
-set :linked_files, %w{config/master.key}
+append :linked_files, "config/master.key"
+
+namespace :deploy do
+  namespace :check do
+    before :linked_files, :set_master_key do
+      on roles(:web), in: :sequence, wait: 10 do
+        unless test("[ -f #{shared_path}/config/master.key ]")
+          upload! 'config/master.key', "#{shared_path}/config/master.key"
+        end
+      end
+    end
+  end
+end
 
 # Rbenv settings
 set :rbenv_type, :user
