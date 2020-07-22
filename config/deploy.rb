@@ -1,13 +1,14 @@
-# config valid for current version and patch releases of Capistrano
+# Config valid for current version and patch releases of Capistrano
 lock '~> 3.14.1'
 
 set :application, 'guava_inn'
 set :repo_url, 'git@github.com:heitorado/guava-inn-20.git'
 set :branch, 'trunk'
 
-# Symlink config/master.key local with the one on the server
-append :linked_files, "config/master.key"
+# Symlink config/master.key to the shared folder
+append :linked_files, 'config/master.key'
 
+# Upload config/master.key if it does not exist on server shared/config
 namespace :deploy do
   namespace :check do
     before :linked_files, :set_master_key do
@@ -20,43 +21,62 @@ namespace :deploy do
   end
 end
 
+# Symlink config/nginx.conf to the shared folder
+append :linked_files, 'config/nginx.conf'
+
+# Always upload config/nginx.conf
+namespace :deploy do
+  namespace :check do
+    before :linked_files, :set_nginx_conf do
+      on roles(:web), in: :sequence, wait: 10 do
+        upload! 'config/nginx.conf', "#{shared_path}/config/nginx.conf"
+      end
+    end
+  end
+end
+
 # Rbenv settings
 set :rbenv_type, :user
 set :rbenv_ruby, '2.7.1'
-set :rbenv_prefix, '/usr/bin/rbenv exec'
-set :rbenv_map_bins, %w{rake gem bundle ruby rails}
 set :rbenv_roles, :all
+append :rbenv_map_bins, 'puma', 'pumactl'
 
-# Default branch is :trunk
-# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+# Puma settings
+set :puma_threads,    [4, 16]
+set :puma_workers,    2
+set :puma_init_active_record, true
 
-# Default deploy_to directory is /var/www/my_app_name
-# set :deploy_to, '/var/www/my_app_name'
+namespace :puma do
+  desc 'Create Directories for Puma Pids, Sockets and Logs'
+  task :make_dirs do
+    on roles(:app) do
+      execute "mkdir #{shared_path}/tmp/sockets -p"
+      execute "mkdir #{shared_path}/tmp/pids -p"
+      execute "mkdir #{shared_path}/log -p"
+    end
+  end
 
-# Default value for :format is :airbrussh.
-# set :format, :airbrussh
+  before :start, :make_dirs
+end
 
-# You can configure the Airbrussh format using :format_options.
-# These are the defaults.
-# set :format_options, command_output: true, log_file: 'log/capistrano.log', color: :auto, truncate: :auto
+# Tasks for initial deploy and puma restart
+namespace :deploy do
+  desc 'Initial Deploy'
+  task :initial do
+    on roles(:app) do
+      before 'deploy:restart', 'puma:start'
+      invoke 'deploy'
+    end
+  end
 
-# Default value for :pty is false
-# set :pty, true
+  desc 'Restart application'
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+      invoke 'puma:restart'
+    end
+  end
 
-# Default value for :linked_files is []
-# append :linked_files, 'config/database.yml'
+  after  :finishing,    :cleanup
+  after  :finishing,    :restart
+end
 
-# Default value for linked_dirs is []
-# append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system'
-
-# Default value for default_env is {}
-# set :default_env, { path: '/opt/ruby/bin:$PATH' }
-
-# Default value for local_user is ENV['USER']
-# set :local_user, -> { `git config user.name`.chomp }
-
-# Default value for keep_releases is 5
-# set :keep_releases, 5
-
-# Uncomment the following to require manually verifying the host key before first deploy.
-# set :ssh_options, verify_host_key: :secure
