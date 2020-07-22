@@ -19,6 +19,7 @@ FactoryBot.define do
         evaluator.with_reservations.each do |attrs|
           attrs.merge!(room: room)
           create(:reservation, attrs)
+          room.reload
         end
       end
     end

@@ -7,6 +7,8 @@ class Room < ApplicationRecord
   validates_numericality_of :capacity, greater_than: 0, less_than_or_equal_to: 10
   validates_length_of :notes, maximum: 512
 
+  validate :allowed_to_lower_capacity, if: :capacity_changed?
+
   after_find :calculate_occupancy_rates
   attr_reader :week_occupancy_rate, :month_occupancy_rate
 
@@ -51,5 +53,14 @@ class Room < ApplicationRecord
   def calculate_occupancy_rates
     @week_occupancy_rate = occupancy_rate_for_the_next(7)
     @month_occupancy_rate = occupancy_rate_for_the_next(30)
+  end
+
+  def allowed_to_lower_capacity
+    return if capacity.blank?
+    return if reservations.blank?
+    return if reservations.select { |r| r.number_of_guests > capacity }.empty?
+
+    errors.add(:capacity, :impossible_to_lower,
+               message: "Cannot lower room capacity to #{capacity} due to higher number of guests in some reservation")
   end
 end
