@@ -51,6 +51,18 @@ RSpec.describe Room, type: :model do
     expect(room).to have_error_on(:capacity, :less_than_or_equal_to)
   end
 
+  context 'when updating capacity' do
+    it 'validates that capacity should not be less than the number of guests of any active reservation' do
+      room = create(:room, capacity: 4, with_reservations: [
+                      { number_of_guests: 4 }
+                    ])
+      room.capacity = 2
+
+      expect(room).to_not be_valid
+      expect(room).to have_error_on(:capacity, :impossible_to_lower)
+    end
+  end
+
   it 'validates length of notes' do
     # For generating a random string of length 513
     room = build(:room, notes: (0..512).map { [*('A'..'z')].sample }.join)
