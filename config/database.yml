@@ -81,5 +81,5 @@ test:
 production:
   <<: *default
   database: guava_inn_production
-  username: guava_inn
-  password: <%= ENV['GUAVA_INN_DATABASE_PASSWORD'] %>
+  username: <%= Rails.application.credentials.dig(:production, :postgres_username) %>
+  password: <%= Rails.application.credentials.dig(:production, :postgres_password) %>
