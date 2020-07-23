@@ -24,12 +24,14 @@ end
 # Symlink config/nginx.conf to the shared folder
 append :linked_files, 'config/nginx.conf'
 
-# Always upload config/nginx.conf
+# Upload config/nginx.conf if not already present
 namespace :deploy do
   namespace :check do
     before :linked_files, :set_nginx_conf do
       on roles(:web), in: :sequence, wait: 10 do
-        upload! 'config/nginx.conf', "#{shared_path}/config/nginx.conf"
+        unless test("[ -f #{shared_path}/config/nginx.conf ]")
+          upload! 'config/nginx.conf', "#{shared_path}/config/nginx.conf"
+        end
       end
     end
   end
