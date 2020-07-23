@@ -28,7 +28,6 @@ jobs:
           POSTGRES_USER: guava-inn-circleci
           POSTGRES_DB: guava_inn_test
           POSTGRES_PASSWORD: ""
-
     steps:
       - checkout
       - ruby/install-deps
@@ -44,6 +43,18 @@ jobs:
       - store_artifacts:
           path: coverage
 
+  deploy:
+    docker:
+      - image: circleci/ruby:2.7.1-node-browsers
+    executor: ruby/default
+    steps:
+      - checkout
+      - ruby/install-deps
+      - add_ssh_keys
+      - run:
+          name: Deploy to production
+          command: eval `ssh-agent` && ssh-add ~/.ssh/id_rsa* && bundle exec cap production deploy
+
 workflows:
   version: 2
   build_and_test:
@@ -52,3 +63,9 @@ workflows:
       - test:
           requires:
             - build
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: trunk
