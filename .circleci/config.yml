@@ -49,9 +49,11 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
+      - ruby/install-deps
+      - add_ssh_keys
       - run:
           name: Deploy to production
-          command: bundle exec cap production deploy
+          command: eval `ssh-agent` && ssh-add ~/.ssh/id_rsa* && bundle exec cap production deploy
 
 workflows:
   version: 2
