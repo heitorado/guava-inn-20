@@ -88,6 +88,20 @@ RSpec.describe Reservation, type: :model do
     expect(reservation).to have_error_on(:guest_name, :too_long)
   end
 
+  it 'validates format of email' do
+    reservation = build(:reservation, guest_email: 'not_a_valid_email.com')
+
+    expect(reservation).to_not be_valid
+    expect(reservation).to have_error_on(:guest_email, :invalid)
+  end
+
+  it 'validates length of email' do
+    reservation = build(:reservation, guest_email: "#{(0..128).map { [*('A'..'z')].sample }.join}@mail.com")
+
+    expect(reservation).to_not be_valid
+    expect(reservation).to have_error_on(:guest_email, :too_long)
+  end
+
   it 'validates presence of number_of_guests' do
     reservation = build(:reservation, number_of_guests: nil)
 
