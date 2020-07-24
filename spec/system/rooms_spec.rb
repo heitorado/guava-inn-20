@@ -185,6 +185,7 @@ RSpec.describe 'Rooms', type: :system do
       within('table') do
         within('thead') do
           expect(page).to have_content('Number')
+          expect(page).to have_content('Status')
           expect(page).to have_content('Period')
           expect(page).to have_content('Duration')
           expect(page).to have_content('Guest Name')
@@ -194,6 +195,7 @@ RSpec.describe 'Rooms', type: :system do
 
         within('tbody tr:first-child') do
           expect(page).to have_content('147-01')
+          expect(page).to have_content('Planned')
           expect(page).to have_content("#{@room.reservations.first.start_date} to #{@room.reservations.first.end_date}")
           expect(page).to have_content('8 nights')
           expect(page).to have_content('João Santana')
@@ -202,6 +204,7 @@ RSpec.describe 'Rooms', type: :system do
 
         within('tbody tr:last-child') do
           expect(page).to have_content('147-02')
+          expect(page).to have_content('Planned')
           expect(page).to have_content("#{@room.reservations.second.start_date} to #{@room.reservations.second.end_date}")
           expect(page).to have_content('1 night')
           expect(page).to have_content('Carolina dos Anjos')
