@@ -32,3 +32,15 @@ h5 {
   margin-top: 0;
   margin-bottom: 0;
 }
+
+.reservation-status.finished {
+  color: #f6494d;
+}
+
+.reservation-status.ongoing {
+  color: #2f3280;
+}
+
+.reservation-status.planned {
+  color: #5bb431;
+}
