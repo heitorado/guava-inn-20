@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="mail-header header-confirmation">
+    <h2>Reservation confirmed!</h2>
+  </div>
+  <div class="mail-body">
+    <ul class="mail-content">
+      <li>
+        Your reservation has been confirmed at Guava Inn! Your reservation code is <%= @reservation.code %>.
+      </li>
+      <li>
+        You will be staying for <%= @reservation.duration %> nights at <b>Room <%= @reservation.room.code %></b>.<br>
+        We'll make sure it  is super clean and comfy for when you arrive :)
+      </li>
+      <li>
+        Your reservation starts at <b><%= @reservation.start_date %></b> and ends at <b><%= @reservation.end_date %></b>.<br>
+        We hope you enjoy your stay. Also, don't forget to try our world famous Goiabada!
+      </li>
+      <li>
+        <i>Oh, and remember that check-in and check-out time starts and ends at <b>12pm</b>, respectively. See you soon!</i>
+      </li>
+    </ul>
+  </div>
+</div>

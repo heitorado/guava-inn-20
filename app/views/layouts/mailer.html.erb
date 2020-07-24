@@ -1,9 +1,73 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <style>
-      /* Email styles need to be inline */
+    <title>Information about your reservation</title>
+    <style type="text/css">
+      body {
+        line-height: 1.6em;
+        background-color: #f6f6f6;
+        font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+        font-size: 14px;
+      }
+
+      .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 1px solid #e9e9e9;
+      }
+
+      h2 {
+        margin: 0;
+      }
+
+      .mail-header {
+        text-align: center;
+        line-height: 5em;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        margin: 0;
+      }
+
+      .header-confirmation {
+        background-color: #5bb431;
+        color: white;
+      }
+
+      .header-cancellation {
+        background-color: #f6494d;
+        color: white;
+      }
+
+      .mail-body {
+        background-color: white;
+        border-bottom-right-radius: 3px;
+        border-bottom-left-radius: 3px;
+        padding: 3%;
+      }
+
+      .mail-content {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+      }
+
+      .mail-content li {
+        margin-bottom: 5%;
+      }
+
+      @media only screen and (max-width: 640px) {
+        h2 {
+          font-size: 1.5em;
+        }
+
+        .container {
+          width: 95%;
+        }
+      }
     </style>
   </head>
 
