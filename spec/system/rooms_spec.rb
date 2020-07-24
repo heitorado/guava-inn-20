@@ -19,6 +19,12 @@ RSpec.describe 'Rooms', type: :system do
              ])
     end
 
+    it 'shows the total number of rooms' do
+      visit rooms_path
+
+      expect(page).to have_content("#{Room.count} Rooms registered")
+    end
+
     it 'shows all rooms in the system with their respective details' do
       visit rooms_path
 
