@@ -163,6 +163,7 @@ RSpec.describe 'Rooms', type: :system do
                          start_date: Date.tomorrow,
                          end_date: 9.days.from_now,
                          guest_name: 'João Santana',
+                         guest_email: 'joaosantana@example.com',
                          number_of_guests: 1 },
                        { id: 2,
                          start_date: 10.days.from_now,
@@ -213,19 +214,31 @@ RSpec.describe 'Rooms', type: :system do
       end
     end
 
-    it 'allows users to delete a reservation' do
-      visit room_path(@room.id)
+    context 'when deleting a reservation for the room' do
+      before do
+        visit room_path(@room.id)
 
-      expect(page).to have_selector('table tbody tr', count: 2)
+        expect(page).to have_selector('table tbody tr', count: 2)
 
-      within('table tbody tr:first-child') do
-        accept_alert do
-          click_link 'Destroy'
+        within('table tbody tr:first-child') do
+          accept_alert do
+            click_link 'Destroy'
+          end
         end
       end
 
-      expect(page).to have_selector('table tbody tr', count: 1)
-      expect(page).to have_content('Reservation 147-01 was successfully destroyed.')
+      it 'allows users to delete a reservation' do
+        expect(page).to have_selector('table tbody tr', count: 1)
+        expect(page).to have_content('Reservation 147-01 was successfully destroyed.')
+      end
+
+      context 'when guest email is informed' do
+        it 'sends a cancellation mail to the guest' do
+          expect(page).to have_content('was successfully destroyed.')
+          expect(ActionMailer::Base.deliveries.count).to eq(1)
+          expect(ActionMailer::Base.deliveries.first.to).to include('joaosantana@example.com')
+        end
+      end
     end
 
     it 'has a link to edit the room details' do
