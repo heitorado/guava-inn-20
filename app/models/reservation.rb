@@ -4,6 +4,9 @@ class Reservation < ApplicationRecord
   validates_presence_of :start_date, :end_date, :guest_name, :number_of_guests
   validates_length_of :guest_name, maximum: 256
   validates_numericality_of :number_of_guests, greater_than: 0, less_than_or_equal_to: 10
+  validates :guest_email, format: { with: /\A(.+)@(.+)\z/, message: 'Invalid email' },
+                          length: { maximum: 128 },
+                          allow_blank: true
   validate :start_date_is_before_end_date
   validate :chosen_dates_do_not_overlap_with_existent_reservations
   validate :number_of_guests_does_not_exceed_room_capacity
