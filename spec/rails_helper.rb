@@ -20,9 +20,9 @@ SimpleCov.start :rails do
   end
 end
 
-# Upload to codecov website
+# Upload to codecov website (but only if running tests on CI)
 require 'codecov'
-SimpleCov.formatter = SimpleCov::Formatter::Codecov
+SimpleCov.formatter = SimpleCov::Formatter::Codecov if ENV['CI']
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
