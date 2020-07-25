@@ -25,6 +25,10 @@ RSpec.describe GuestMailer, type: :mailer do
       expect(@mail.from).to eq(['reservations@guava-inn.tech'])
     end
 
+    it 'contains the guest name' do
+      expect(@mail.body.encoded).to match(@reservation.guest_name.split.first)
+    end
+
     it 'contains the reservation code' do
       expect(@mail.body.encoded).to match("Your reservation code is #{@reservation.code}")
     end
@@ -67,6 +71,10 @@ RSpec.describe GuestMailer, type: :mailer do
 
     it 'renders the sender email' do
       expect(@mail.from).to eq(['reservations@guava-inn.tech'])
+    end
+
+    it 'contains the guest name' do
+      expect(@mail.body.encoded).to match(@reservation.guest_name.split.first)
     end
 
     it 'contains the reservation duration' do
