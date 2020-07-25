@@ -90,6 +90,9 @@ Rails.application.configure do
     enable_starttls_auto: true
   }
 
+  # Only send session cookies over HTTPS
+  config.session_store :cookie_store, key: '_guava_inn_session', secure: true
+
   # Inserts middleware to perform automatic connection switching.
   # The `database_selector` hash is used to pass options to the DatabaseSelector
   # middleware. The `delay` is used to determine how long to wait after a write
