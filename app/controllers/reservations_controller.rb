@@ -27,6 +27,8 @@ class ReservationsController < ApplicationController
     @back_url = session[:last_search_url]
     @reservation = Reservation.new(reservation_params)
     if @reservation.save
+      GuestMailer.with(reservation: @reservation).reservation_confirmed.deliver if @reservation.guest_email.present?
+
       redirect_to @reservation.room,
                   notice: "Reservation #{@reservation.code} was successfully created."
     else
@@ -37,7 +39,10 @@ class ReservationsController < ApplicationController
   def destroy
     @reservation = Reservation.find(params[:id])
     @reservation.destroy
-    redirect_to room_path(@reservation.room),
+
+    GuestMailer.with(reservation: @reservation).reservation_cancelled.deliver if @reservation.guest_email.present?
+
+    redirect_to @reservation.room,
                 notice: "Reservation #{@reservation.code} was successfully destroyed."
   end
 
@@ -58,6 +63,6 @@ class ReservationsController < ApplicationController
   end
 
   def reservation_params
-    params.require(:reservation).permit(:start_date, :end_date, :number_of_guests, :guest_name, :room_id)
+    params.require(:reservation).permit(:start_date, :end_date, :number_of_guests, :guest_name, :guest_email, :room_id)
   end
 end

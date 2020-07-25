@@ -194,6 +194,25 @@ RSpec.describe 'Reservations', type: :system do
       expect(page).to have_content("can't be blank")
     end
 
+    context 'when guest email field is informed' do
+      before do
+        fill_in 'reservation_guest_name', with: 'Heitor Carvalho'
+        fill_in 'reservation_guest_email', with: 'heitorcarvalho@example.com'
+        click_button 'commit'
+      end
+
+      it 'creates the reservation successfully' do
+        expect(page).to have_content('was successfully created.')
+        expect(page).to have_content('Heitor Carvalho')
+      end
+
+      it 'sends a confirmation email' do
+        expect(page).to have_content('was successfully created.')
+        expect(ActionMailer::Base.deliveries.count).to eq(1)
+        expect(ActionMailer::Base.deliveries.first.to).to include('heitorcarvalho@example.com')
+      end
+    end
+
     context 'when there is more than one failed creation attempt in succession' do
       it 'has a link that goes back to the last search made' do
         click_button 'commit'

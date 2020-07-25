@@ -44,6 +44,11 @@
     <%= form.text_field :guest_name, maxlength: 256, size: 20 %>
   </div>
 
+  <div class="field">
+    <%= form.label :guest_email %>
+    <%= form.text_field :guest_email, maxlength: 128, size: 20 %>
+  </div>
+
   <div class="actions">
     <%= form.submit %>
   </div>
