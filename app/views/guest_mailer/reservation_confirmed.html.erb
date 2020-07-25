@@ -5,7 +5,7 @@
   <div class="mail-body">
     <ul class="mail-content">
       <li>
-        Your reservation has been confirmed at Guava Inn! Your reservation code is <%= @reservation.code %>.
+        Hey <%= @reservation.guest_name.split.first %>, your reservation has been confirmed at Guava Inn! Your reservation code is <%= @reservation.code %>.
       </li>
       <li>
         You will be staying for <%= @reservation.duration %> nights at <b>Room <%= @reservation.room.code %></b>.<br>

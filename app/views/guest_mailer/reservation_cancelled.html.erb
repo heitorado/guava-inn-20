@@ -5,7 +5,7 @@
   <div class="mail-body">
     <ul class="mail-content">
       <li>
-        Oh no! Your reservation was cancelled at Guava Inn!
+        Oh no, <%= @reservation.guest_name.split.first %>! Your reservation was cancelled at Guava Inn!
       </li>
       <li>
         Your reservation for <%= @reservation.duration %> nights at <b>Room <%= @reservation.room.code %></b>
