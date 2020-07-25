@@ -80,6 +80,7 @@ test:
 #
 production:
   <<: *default
+  host: localhost
   database: guava_inn_production
   username: <%= Rails.application.credentials.dig(:production, :postgres_username) %>
   password: <%= Rails.application.credentials.dig(:production, :postgres_password) %>
