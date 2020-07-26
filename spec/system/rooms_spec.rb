@@ -247,7 +247,7 @@ RSpec.describe 'Rooms', type: :system do
     it 'has a link to edit the room details' do
       visit room_path(@room.id)
 
-      expect(page).to have_link('Edit', href: edit_room_path(@room.id))
+      expect(page).to have_link(href: edit_room_path(@room.id))
     end
 
     it 'has a link to go back to the listing' do
@@ -298,7 +298,7 @@ RSpec.describe 'Rooms', type: :system do
     it 'has a link to show the room details' do
       visit edit_room_path(@room.id)
 
-      expect(page).to have_link('Show', href: room_path(@room.id))
+      expect(page).to have_link(href: room_path(@room.id))
     end
 
     it 'has a link to go back to the listing' do
