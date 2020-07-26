@@ -1,6 +1,28 @@
-<h2>Editing Room</h2>
+<div class="row mt-5">
+  <div class="col-sm-3 col-md-3 pl-0">
+    <h2>
+      <i class="mdi mdi-home-edit" aria-hidden="true"></i>&nbsp;
+      Editing Room
+    </h2>
+  </div>
+
+  <div class="col-sm-1 col-md-1 pl-0">
+     <%= link_to @room, class: "text-info" do %>
+        <h2>
+          <i class="mdi mdi-eye" aria-hidden="true"></i>
+        </h2>
+      <% end %>
+  </div>
+</div>
 
 <%= render 'form', room: @room %>
 
-<%= link_to 'Show', @room %> |
-<%= link_to 'Back', rooms_path %>
+<div class="row mt-1">
+  <div class="col-sm-6 col-md-2">
+    <%= link_to rooms_path do %>
+      <button class="btn btn-info mdi mdi-arrow-left">
+        Back
+      </button>
+    <% end %>
+  </div>
+</div>

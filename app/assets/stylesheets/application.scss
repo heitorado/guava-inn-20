@@ -1,0 +1,41 @@
+$primary:       #f6494d !default; // Guava
+$secondary:     #c6d43e !default; // Green
+$success:       #9aa812 !default; // Green Darkest
+$info:          #2f3280 !default; // Integra
+$warning:       #f2d714 !default; // Yellow
+$danger:        #d01f32 !default; // Guava-Darkest
+$light:         #FFB238 !default; // Sala de Triagem
+
+@import "bootstrap/scss/bootstrap";
+@import "rooms";
+@import "scaffolds";
+@import "body_borders";
+@import "material_design_icons";
+
+@media (max-width: 992px) {
+  body {
+    margin: 4%;
+  }
+}
+
+body {
+  background-image: image-url('dotted.png');
+}
+
+body, input, p, ol, ul, td {
+  font-family: -apple-system,BlinkMacSystemFont,Ubuntu,"Segoe UI",Roboto,Oxygen-Sans,Cantarell,"Helvetica Neue",sans-serif;
+  font-size: 16px;
+}
+
+.card-header > h3, button > span {
+  display: flex;
+  align-items: center;
+}
+
+.card-header {
+  background-color: rgba(0,0,0,0);
+}
+
+.guava-inn-logo {
+  filter: drop-shadow(1px 1px 1px gray);
+}

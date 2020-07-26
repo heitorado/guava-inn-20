@@ -1,32 +1,48 @@
-<%= form_with(model: room, local: true) do |form| %>
-  <% if room.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(room.errors.count, "error") %> prohibited this room from being saved:</h2>
+<%= form_with(model: room, local: true, class: 'pl-3') do |form| %>
+  <div class="row">
+    <div class="col-md-12 col-sm-12">
+      <% if room.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(room.errors.count, "error") %> prohibited this room from being saved:</h2>
 
-      <ul>
-        <% room.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+          <ul>
+            <% room.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
     </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :code %>
-    <%= form.text_field :code, maxlength: 12 %>
   </div>
 
-  <div class="field">
-    <%= form.label :capacity %>
-    <%= form.select :capacity, options_for_select(1..10, form.object.capacity) %>
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <div class="form-group field">
+        <%= form.label :code %>
+        <%= form.text_field :code, maxlength: 12, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="col-sm-12 col-md-1">
+      <div class="form-group field">
+        <%= form.label :capacity %>
+        <%= form.select :capacity, options_for_select(1..10, form.object.capacity), {}, { class: 'form-control' } %>
+      </div>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :notes %>
-    <%= form.text_area :notes %>
+  <div class="row">
+    <div class="col-sm-12 col-md-5">
+      <%= form.label :notes %>
+      <%= form.text_area :notes, class: 'form-control' %>
+    </div>
   </div>
 
-  <div class="actions">
-    <%= form.submit %>
+  <div class="row mt-3">
+    <div class="col-sm-12 col-md-12">
+      <div class="actions">
+        <%= form.submit class: "btn btn-success" %>
+      </div>
+    </div>
   </div>
 <% end %>

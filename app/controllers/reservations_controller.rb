@@ -10,6 +10,10 @@ class ReservationsController < ApplicationController
       flash[:alert] = "Cannot search: the 'From' date must happen before the 'To' date"
     end
 
+    unless start_and_end_date_present? || params[:commit].blank?
+      flash[:alert] = 'Cannot search: you must fill both date fields.'
+    end
+
     @available_rooms = if @should_show_results
                          Room.minimum_capacity_of(params[:number_of_guests]) -
                            Room.unavailable_for_period(params[:start_date], params[:end_date])

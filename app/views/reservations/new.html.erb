@@ -1,9 +1,24 @@
-<% if @reservation.room %>
-  <h2>New Reservation for Room <%= @reservation.room.code %></h2>
-<% else %>
-  <h2>New Reservation</h2>
-<% end %>
+<div class="row mt-5">
+  <div class="col-sm-12 col-md-12 pl-0">
+    <h2>
+      <i class="mdi mdi-calendar-plus" aria-hidden="true"></i>&nbsp;
+      <% if @reservation.room %>
+        New Reservation for Room <%= @reservation.room.code %>
+      <% else %>
+        New Reservation
+      <% end %>
+    </h2>
+  </div>
+</div>
 
 <%= render 'form', reservation: @reservation %>
 
-<%= link_to 'Back', @back_url %>
+<div class="row mt-1">
+  <div class="col-sm-6 col-md-2">
+    <%= link_to @back_url do %>
+      <button class="btn btn-info mdi mdi-arrow-left">
+        Back
+      </button>
+    <% end %>
+  </div>
+</div>

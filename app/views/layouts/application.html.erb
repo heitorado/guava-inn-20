@@ -2,17 +2,30 @@
 <html>
   <head>
     <title>Guava Inn</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link rel="stylesheet" type="text/css" href="https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.min.css"/>
   </head>
 
   <body>
     <div class="container">
-      <h1>Guava Inn</h1>
+      <div class="row">
+        <div class="col-sm-12 col-md-4 pl-0">
+          <%= link_to rooms_path do %>
+            <%= image_tag "guava.svg", class: "img-fluid guava-inn-logo"%>
+          <% end %>
+        </div>
+      </div>
       <%= yield %>
     </div>
+
+    <div id="left"></div>
+    <div id="right"></div>
+    <div id="top"></div>
+    <div id="bottom"></div>
   </body>
 </html>

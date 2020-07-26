@@ -141,6 +141,32 @@ RSpec.describe 'Reservations', type: :system do
         expect(page).to have_content("the 'From' date must happen before the 'To' date")
       end
     end
+
+    context 'when start_date or end_date are partially or not filled' do
+      before do
+        expect(page).to have_content('New Reservation')
+
+        within('form') do
+          fill_in 'start_date', with: ''
+          fill_in 'end_date', with: ''
+          click_button 'commit'
+        end
+      end
+
+      it 'shows no results' do
+        expect(page).to have_no_content('Available Rooms')
+        expect(page).to have_no_content('101')
+        expect(page).to have_no_content('102')
+        expect(page).to have_no_content('103')
+        expect(page).to have_no_content('104')
+        expect(page).to have_no_content('105')
+        expect(page).to have_no_content('106')
+      end
+
+      it 'returns an error message' do
+        expect(page).to have_content('you must fill both date fields.')
+      end
+    end
   end
 
   describe 'new reservation' do

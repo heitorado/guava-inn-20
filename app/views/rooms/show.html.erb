@@ -1,73 +1,114 @@
-<h2>Room <%= @room.code %></h2>
+<div class="row mt-5">
+  <div class="col-sm-3 col-md-3 pl-0">
+    <h2>
+      <i class="mdi mdi-home" aria-hidden="true"></i>&nbsp;
+      Room <%= @room.code %>
+    </h2>
+  </div>
+
+  <div class="col-sm-1 col-md-1 pl-0">
+    <%= link_to edit_room_path(@room), class: "text-success" do %>
+      <h2>
+        <i class="mdi mdi-pencil" aria-hidden="true"></i>
+      </h2>
+    <% end %>
+  </div>
+</div>
 
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Code:</strong>
-  <%= @room.code %>
-</p>
+<div class="row pl-3 pr-3">
+  <div class="col-sm-12 col-md-12">
+    <p>
+      <strong>Code:</strong>
+      <%= @room.code %>
+    </p>
+  </div>
 
-<p>
-  <strong>Capacity:</strong>
-  <%= @room.capacity %>
-</p>
+  <div class="col-sm-12 col-md-12">
+    <p>
+      <strong>Capacity:</strong>
+      <%= @room.capacity %>
+    </p>
+  </div>
 
-<p>
-  <strong>Occupancy Rate (Week):</strong>
-  <%= @room.week_occupancy_rate %>%
-</p>
+  <div class="col-sm-12 col-md-12">
+    <p>
+      <strong>Occupancy Rate (Week):</strong>
+      <%= @room.week_occupancy_rate %>%
+    </p>
+  </div>
 
-<p>
-  <strong>Occupancy Rate (Month):</strong>
-  <%= @room.month_occupancy_rate %>%
-</p>
+  <div class="col-sm-12 col-md-12">
+    <p>
+      <strong>Occupancy Rate (Month):</strong>
+      <%= @room.month_occupancy_rate %>%
+    </p>
+  </div>
 
-<p>
-  <strong>Notes:</strong>
-  <%= @room.notes %>
-</p>
+  <div class="col-sm-12 col-md-12">
+    <p>
+      <strong>Notes:</strong>
+      <%= @room.notes %>
+    </p>
+  </div>
+</div>
 
-<h3>Reservations</h3>
+<div class="row mt-1">
+  <div class="col-sm-6 col-md-2">
+    <%= link_to rooms_path do %>
+      <button class="btn btn-info mdi mdi-arrow-left">
+        Back
+      </button>
+    <% end %>
+  </div>
+</div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Number</th>
-      <th>Status</th>
-      <th>Period</th>
-      <th>Duration</th>
-      <th width="25%">Guest Name</th>
-      <th># of guests</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
+<div class="row mt-5">
+  <div class="col-sm-12 col-md-12 pl-0">
+    <h3>
+      <i class="mdi mdi-calendar" aria-hidden="true"></i>&nbsp;
+      Reservations
+    </h3>
+  </div>
+</div>
 
-  <tbody>
-    <% if @room.reservations.any? %>
-      <% @room.reservations.each do |reservation| %>
+<div class="row pl-3 pr-3">
+  <table class="table table-hover table-responsive-sm">
+    <thead class="bg-secondary">
+      <tr>
+        <th>Number</th>
+        <th>Status</th>
+        <th>Period</th>
+        <th>Duration</th>
+        <th width="25%">Guest Name</th>
+        <th># of guests</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if @room.reservations.any? %>
+        <% @room.reservations.each do |reservation| %>
+          <tr>
+            <td class="align-middle"><%= reservation.code %></td>
+            <td class="align-middle reservation-status <%= get_status_of(reservation).downcase %>">
+              <%= get_status_of(reservation) %>
+            </td>
+            <td class="align-middle"><%= l reservation.start_date %> to <%= l reservation.end_date %></td>
+            <td class="align-middle"><%= pluralize(reservation.duration, 'night') %></td>
+            <td class="align-middle"><%= reservation.guest_name %></td>
+            <td class="align-middle"><%= pluralize(reservation.number_of_guests, 'guest') %></td>
+            <td class="align-middle"><%= link_to 'Destroy', reservation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        <% end %>
+      <% else %>
         <tr>
-          <td><%= reservation.code %></td>
-          <td class="reservation-status <%= get_status_of(reservation).downcase %>">
-            <%= get_status_of(reservation) %>
+          <td class="align-middle" colspan="6">
+            There are no reservations for this room yet.
           </td>
-          <td><%= l reservation.start_date %> to <%= l reservation.end_date %></td>
-          <td><%= pluralize(reservation.duration, 'night') %></td>
-          <td><%= reservation.guest_name %></td>
-          <td><%= pluralize(reservation.number_of_guests, 'guest') %></td>
-          <td><%= link_to 'Destroy', reservation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>
       <% end %>
-    <% else %>
-      <tr>
-        <td colspan="6">
-          There are no reservations for this room yet.
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br/>
-
-<%= link_to 'Edit', edit_room_path(@room) %> |
-<%= link_to 'Back', rooms_path %>
+    </tbody>
+  </table>
+</div>
