@@ -51,8 +51,9 @@ RSpec.describe 'Rooms', type: :system do
           expect(page).to have_content('1 person')
           expect(page).to have_content('57%')
           expect(page).to have_content('13%')
-          expect(page).to have_link('Show', href: room_path(Room.first.id))
-          expect(page).to have_link('Edit', href: edit_room_path(Room.first.id))
+          expect(page).to have_link(href: room_path(Room.first.id))
+          expect(page).to have_link(href: edit_room_path(Room.first.id))
+          expect(page).to have_selector("a[data-method=delete][href=\"#{room_path(Room.first.id)}\"]")
         end
 
         within('tbody tr:nth-child(2)') do
@@ -60,8 +61,9 @@ RSpec.describe 'Rooms', type: :system do
           expect(page).to have_content('5 people')
           expect(page).to have_content('0%')
           expect(page).to have_content('33%')
-          expect(page).to have_link('Show', href: room_path(Room.second.id))
-          expect(page).to have_link('Edit', href: edit_room_path(Room.second.id))
+          expect(page).to have_link(href: room_path(Room.second.id))
+          expect(page).to have_link(href: edit_room_path(Room.second.id))
+          expect(page).to have_selector("a[data-method=delete][href=\"#{room_path(Room.second.id)}\"]")
         end
 
         within('tbody tr:last-child') do
@@ -69,8 +71,9 @@ RSpec.describe 'Rooms', type: :system do
           expect(page).to have_content('3 people')
           expect(page).to have_content('86%')
           expect(page).to have_content('50%')
-          expect(page).to have_link('Show', href: room_path(Room.last.id))
-          expect(page).to have_link('Edit', href: edit_room_path(Room.last.id))
+          expect(page).to have_link(href: room_path(Room.last.id))
+          expect(page).to have_link(href: edit_room_path(Room.last.id))
+          expect(page).to have_selector("a[data-method=delete][href=\"#{room_path(Room.last.id)}\"]")
         end
       end
     end
@@ -82,7 +85,7 @@ RSpec.describe 'Rooms', type: :system do
 
       within('table tbody tr:first-child') do
         accept_alert do
-          click_link 'Destroy'
+          find(:css, "a[data-method=delete][href=\"#{room_path(Room.first.id)}\"]").click
         end
       end
 
