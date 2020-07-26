@@ -1,36 +1,7 @@
-.global-occupancy {
-  .global-occupancy-box {
-    margin-bottom: 1em;
-    margin-right: 1em;
-    padding: 0.75em 1.25em;
-    float: left;
-    background-color: #eee;
-    font-size: 1.25em;
-    line-height: 1.5;
-
-    h3 {
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-
-    .global-occupancy-rate {
-      font-size: 2em;
-    }
-
-    small {
-      font-size: 0.75em;
-    }
+#week-global-occupancy, #month-global-occupancy {
+  .card-title {
+    font-size: 4.5rem;
   }
-}
-
-h2 {
-  clear: both;
-}
-
-h5 {
-  font-weight: normal;
-  margin-top: 0;
-  margin-bottom: 0;
 }
 
 .reservation-status.finished {

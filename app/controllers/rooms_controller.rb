@@ -6,6 +6,8 @@ class RoomsController < ApplicationController
 
     @month_global_occupancy_rate = @rooms.map(&:month_occupancy_rate).sum / (@rooms.count.nonzero? || 1)
     @week_global_occupancy_rate = @rooms.map(&:week_occupancy_rate).sum / (@rooms.count.nonzero? || 1)
+    @month_total_reservations = Reservation.happening_between(Date.tomorrow, 30.days.from_now).count
+    @week_total_reservations = Reservation.happening_between(Date.tomorrow, 7.days.from_now).count
   end
 
   def show

@@ -11,6 +11,10 @@ class Reservation < ApplicationRecord
   validate :chosen_dates_do_not_overlap_with_existent_reservations
   validate :number_of_guests_does_not_exceed_room_capacity
 
+  scope :happening_between, ->(query_start_date, query_end_date) {
+    where('start_date <= ? AND end_date > ?', query_end_date, query_start_date)
+  }
+
   def duration
     if start_date.present? && end_date.present? && end_date > start_date
       (end_date - start_date).to_i

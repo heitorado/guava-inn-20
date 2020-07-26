@@ -17,11 +17,12 @@
         Week
       </h3>
     </div>
-    <div class="card-body pb-4 pl-1 pr-2">
+    <div class="card-body pt-0 pb-4 pl-1 pr-2">
       <h1 class="card-title">
         <%= @week_global_occupancy_rate %><small>%</small>
       </h1>
-      <p class="card-text font-italic">in the next 7 days</p>
+      <p class="card-text font-italic mb-0">in the next 7 days</p>
+      <p class="card-text font-italic small">due to <%= pluralize(@week_total_reservations, 'reservation') %> reservations </p>
     </div>
   </div>
 
@@ -32,11 +33,12 @@
         Month
       </h3>
     </div>
-    <div class="card-body pb-4 pl-1 pr-2">
+    <div class="card-body pt-0 pb-4 pl-1 pr-2">
       <h1 class="card-title">
         <%= @month_global_occupancy_rate %><small>%</small>
       </h1>
-      <p class="card-text font-italic">in the next 30 days</p>
+      <p class="card-text font-italic mb-0">in the next 30 days</p>
+      <p class="card-text font-italic small">due to <%= pluralize(@month_total_reservations, 'reservation') %> reservations </p>
     </div>
   </div>
 </div>
