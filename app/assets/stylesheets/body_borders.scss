@@ -1,0 +1,29 @@
+#top, #bottom, #left, #right {
+	background: #2b2b2b;
+	position: fixed;
+}
+
+#left, #right {
+  top: 0; bottom: 0;
+  width: 5%;
+}
+#left { left: 0; }
+#right { right: 0; }
+
+#top, #bottom {
+  left: 0; right: 0;
+  height: 0%;
+}
+#top { top: 0; }
+#bottom { bottom: 0; }
+
+@media
+/* Fairly small screens including iphones */
+only screen and (max-width: 500px),
+
+/* iPads */
+only screen and (min-device-width: 768px) and (max-device-width: 1024px)
+
+{
+	#top, #bottom, #left, #right { display: none; }
+}

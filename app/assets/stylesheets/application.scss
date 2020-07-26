@@ -1,28 +1,45 @@
+$primary:       #f6494d !default; // Guava
+$secondary:     #c6d43e !default; // Green
+$success:       #9aa812 !default; // Green Darkest
+$info:          #2f3280 !default; // Integra
+$warning:       #f2d714 !default; // Yellow
+$danger:        #d01f32 !default; // Guava-Darkest
+$light:         #FFB238 !default; // Sala de Triagem
+//$dark:          $gray-800 !default;
+
 @import "bootstrap/scss/bootstrap";
 @import "rooms";
 @import "scaffolds";
+@import "body_borders";
+@import "material_design_icons";
+
+//integra: #2f3280;
+//    --integra-dark: #1f275e;
+
+@media (max-width: 992px) {
+  body {
+    margin: 4%;
+  }
+}
+
+body {
+  background-image: image-url('dotted.png');
+}
 
 body, input, p, ol, ul, td {
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+  font-family: -apple-system,BlinkMacSystemFont,Ubuntu,"Segoe UI",Roboto,Oxygen-Sans,Cantarell,"Helvetica Neue",sans-serif;
   font-size: 16px;
 }
 
-body > .container {
-  width: 960px;
-  margin: auto;
+.card-header > h3, button > span {
+  display: flex;
+  align-items: center;
 }
 
-table {
-  width: 100%;
+.card-header {
+  background-color: rgba(0,0,0,0);
 }
 
-th {
-  background-color: #eee;
-  text-align: left;
-}
-
-table, th, td {
-  border: 1px solid #ccc;
-  border-collapse: collapse;
-  padding: 0.5em 0.75em;
+.guava-inn-logo {
+  filter: drop-shadow(2px 2px 2px gray);
 }
