@@ -16,24 +16,24 @@ class Reservation < ApplicationRecord
   }
 
   def duration
-    if start_date.present? && end_date.present? && end_date > start_date
-      (end_date - start_date).to_i
-    end
+    return unless start_date.present? && end_date.present? && end_date.after?(start_date)
+
+    (end_date - start_date).to_i
   end
 
   def code
-    if id.present? && room&.code.present?
-      formatted_id = '%02d' % id
-      "#{room.code}-#{formatted_id}"
-    end
+    return unless id.present? && room&.code.present?
+
+    formatted_id = format('%<id>02d', id: id)
+    "#{room.code}-#{formatted_id}"
   end
 
   private
 
   def start_date_is_before_end_date
-    if start_date.present? && end_date.present? && start_date >= end_date
-      errors.add(:base, :invalid_dates, message: 'The start date should be before the end date')
-    end
+    return unless start_date.present? && end_date.present? && start_date >= end_date
+
+    errors.add(:base, :invalid_dates, message: 'The start date should be before the end date')
   end
 
   def chosen_dates_do_not_overlap_with_existent_reservations
