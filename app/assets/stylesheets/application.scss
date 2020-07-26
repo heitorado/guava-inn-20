@@ -5,16 +5,12 @@ $info:          #2f3280 !default; // Integra
 $warning:       #f2d714 !default; // Yellow
 $danger:        #d01f32 !default; // Guava-Darkest
 $light:         #FFB238 !default; // Sala de Triagem
-//$dark:          $gray-800 !default;
 
 @import "bootstrap/scss/bootstrap";
 @import "rooms";
 @import "scaffolds";
 @import "body_borders";
 @import "material_design_icons";
-
-//integra: #2f3280;
-//    --integra-dark: #1f275e;
 
 @media (max-width: 992px) {
   body {
