@@ -89,21 +89,21 @@
       <% if @rooms.any? %>
         <% @rooms.each do |room| %>
           <tr>
-            <td class="align-middle pb-1 pt-1"><%= room.code %></td>
-            <td class="align-middle pb-1 pt-1"><%= pluralize(room.capacity, 'person', 'people') %></td>
-            <td class="align-middle pb-1 pt-1"><%= room.week_occupancy_rate %><small>%</small></td>
-            <td class="align-middle pb-1 pt-1"><%= room.month_occupancy_rate %><small>%</small></td>
-            <td class="align-middle pb-1 pt-1 text-center">
+            <td class="align-middle"><%= room.code %></td>
+            <td class="align-middle"><%= pluralize(room.capacity, 'person', 'people') %></td>
+            <td class="align-middle"><%= room.week_occupancy_rate %><small>%</small></td>
+            <td class="align-middle"><%= room.month_occupancy_rate %><small>%</small></td>
+            <td class="align-middle text-center">
               <%= link_to room, class: "text-info" do %>
                 <i class="mdi mdi-eye" aria-hidden="true"></i>
               <% end %>
             </td>
-            <td class="align-middle pb-1 pt-1 text-center">
+            <td class="align-middle text-center">
               <%= link_to edit_room_path(room), class: "text-success" do %>
                 <i class="mdi mdi-pencil" aria-hidden="true"></i>
               <% end %>
             </td>
-            <td class="align-middle pb-1 pt-1 text-center">
+            <td class="align-middle text-center">
               <%= link_to room, method: :delete, data: { confirm: 'Are you sure?' }, class: "text-danger" do %>
                 <i class="mdi mdi-delete" aria-hidden="true"></i>
               <% end %>
