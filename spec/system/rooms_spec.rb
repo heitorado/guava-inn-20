@@ -32,10 +32,12 @@ RSpec.describe 'Rooms', type: :system do
 
       within('#week-global-occupancy') do
         expect(page).to have_content('47%')
+        expect(page).to have_content('due to 2 reservations')
       end
 
       within('#month-global-occupancy') do
         expect(page).to have_content('32%')
+        expect(page).to have_content('due to 4 reservations')
       end
 
       within('table') do
