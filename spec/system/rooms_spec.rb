@@ -176,6 +176,12 @@ RSpec.describe 'Rooms', type: :system do
                      ])
     end
 
+    it 'shows the total number of reservations for the room' do
+      visit room_path(@room.id)
+
+      expect(page).to have_content('2 Reservations made in this room so far.')
+    end
+
     it 'shows the details of a room including its reservations' do
       visit room_path(@room.id)
 
