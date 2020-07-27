@@ -20,13 +20,16 @@ class Room < ApplicationRecord
     joins(:reservations).where('start_date < ? AND end_date > ?', query_end_date, query_start_date).uniq
   }
 
-  def occupancy_rate_for_the_next(n_days)
+  # Calculates the occupancy rate of the room for the next n_days passed in as first parameter.
+  # The default starting date is the day after this method was invoked. This can be overriden by
+  # passing a custom date as the second parameter.
+  def occupancy_rate_for_the_next(n_days, starting_date = nil)
     return 0 if reservations.blank?
 
     # Set the observation boundaries for calculating the occupancy rate:
-    # Starting tomorrow and to n_days after today
-    rate_start_date = Date.tomorrow
-    rate_end_date = n_days.days.from_now.to_date
+    # Starting tomorrow if no starting date is passed and to n_days-1 after the starting date
+    rate_start_date = starting_date || Date.tomorrow
+    rate_end_date = rate_start_date.advance(days: n_days - 1)
 
     # Query for existent reservations that overlap with the dates
     current_reservations = reservations.where('start_date <= ? AND end_date > ?', rate_end_date, rate_start_date)

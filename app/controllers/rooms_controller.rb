@@ -43,6 +43,28 @@ class RoomsController < ApplicationController
     redirect_to rooms_url, notice: 'Room was successfully destroyed.'
   end
 
+  def search_occupancy_rate
+    @valid_search = params[:start_date].present? &&
+                    params[:end_date].present? &&
+                    params[:start_date].to_date <= params[:end_date].to_date
+
+    @start_date = params[:start_date].to_date
+    @end_date = params[:end_date].to_date
+
+    if @valid_search
+      @occupancy_rate = Room.all.map do |room|
+        room.occupancy_rate_for_the_next((@end_date - @start_date).to_i + 1, @start_date)
+      end
+
+      @occupancy_rate = @occupancy_rate.sum / @occupancy_rate.count
+      @total_reservations = Reservation.happening_between(@start_date, @end_date).count
+    end
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
 
   def set_room
