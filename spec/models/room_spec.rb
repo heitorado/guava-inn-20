@@ -116,7 +116,7 @@ RSpec.describe Room, type: :model do
       context 'when there are reservations filling up 3 of the next seven days' do
         it 'calculates 43% occupancy rate' do
           room = create(:room, with_reservations: [
-                          { start_date: Date.today, end_date: 2.days.from_now },
+                          { start_date: Date.current, end_date: 2.days.from_now },
                           { start_date: 5.days.from_now, end_date: 7.days.from_now }
                         ])
 
@@ -176,7 +176,7 @@ RSpec.describe Room, type: :model do
       context 'when there are reservations filling up 15 of the next thirty days' do
         it 'calculates 50% occupancy rate' do
           room = create(:room, with_reservations: [
-                          { start_date: Date.today, end_date: 10.days.from_now },
+                          { start_date: Date.current, end_date: 10.days.from_now },
                           { start_date: 12.days.from_now, end_date: 16.days.from_now },
                           { start_date: 29.days.from_now, end_date: 31.days.from_now }
                         ])
@@ -188,7 +188,7 @@ RSpec.describe Room, type: :model do
       context 'when there are reservations filling up 12 of the next thirty days' do
         it 'calculates 40% occupancy rate' do
           room = create(:room, with_reservations: [
-                          { start_date: Date.today, end_date: 10.days.from_now },
+                          { start_date: Date.current, end_date: 10.days.from_now },
                           { start_date: 12.days.from_now, end_date: 15.days.from_now }
                         ])
 
@@ -211,7 +211,7 @@ RSpec.describe Room, type: :model do
       context 'when there are reservations filling up 3 of the next thirty days' do
         it 'calculates 10% occupancy rate' do
           room = create(:room, with_reservations: [
-                          { start_date: Date.today, end_date: 3.days.from_now },
+                          { start_date: Date.current, end_date: 3.days.from_now },
                           { start_date: 9.days.from_now, end_date: 10.days.from_now }
                         ])
 
