@@ -133,6 +133,71 @@ RSpec.describe 'Rooms', type: :system do
     end
   end
 
+  describe 'search global occupancy' do
+    before do
+      create(:room, code: '101', capacity: 2, with_reservations: [
+               { start_date: '2020-08-01', end_date: '2020-08-15' }
+             ])
+      create(:room, code: '102', capacity: 5, with_reservations: [
+               { start_date: '2020-08-01', end_date: '2020-08-24' }
+             ])
+      create(:room, code: '103', capacity: 3)
+      create(:room, code: '104', capacity: 6, with_reservations: [
+               { start_date: '2020-09-15', end_date: '2020-09-20' }
+             ])
+
+      visit rooms_path
+    end
+
+    it 'allows users to search for a global occupancy rate in a given date interval' do
+      expect(page).to have_content('Search Global Occupancy')
+
+      within('form') do
+        fill_in 'start_date', with: '07/01/2020'
+        fill_in 'end_date', with: '10/01/2020'
+        click_button 'Search'
+      end
+
+      within('#occupation-search-results') do
+        expect(page).to have_content('11%')
+        expect(page).to have_content('from 2020-07-01 to 2020-10-01, total 93 days')
+        expect(page).to have_content('due to 3 reservations across all rooms')
+      end
+    end
+
+    context 'when start_date is after end_date' do
+      it 'returns an error message' do
+        expect(page).to have_content('Search Global Occupancy')
+
+        within('form') do
+          fill_in 'start_date', with: '10/01/2020'
+          fill_in 'end_date', with: '07/01/2020'
+          click_button 'Search'
+        end
+
+        within('#occupation-search-results') do
+          expect(page).to have_content('Invalid search. Verify the chosen dates and try again.')
+        end
+      end
+    end
+
+    context 'when any of start_date or end_date are empty' do
+      it 'returns an error message' do
+        expect(page).to have_content('Search Global Occupancy')
+
+        within('form') do
+          fill_in 'start_date', with: ''
+          fill_in 'end_date', with: ''
+          click_button 'Search'
+        end
+
+        within('#occupation-search-results') do
+          expect(page).to have_content('Invalid search. Verify the chosen dates and try again.')
+        end
+      end
+    end
+  end
+
   describe 'new room' do
     it 'allows users to create a new room' do
       visit new_room_path
