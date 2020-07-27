@@ -1,43 +1,81 @@
 <p id="notice"><%= notice %></p>
 
-<div class="row mt-5">
-  <div class="col-sm-12 col-md-12 pl-0">
-    <h2>
-      <i class="mdi mdi-percent" aria-hidden="true"></i>&nbsp;
-      Global Occupancy
-    </h2>
-  </div>
-</div>
+<div class="row">
+  <div class="col-md-5 col-sm-12" id="current-global-occupancy">
+    <div class="row mt-5">
+      <div class="col pl-0">
+        <h2>
+          <i class="mdi mdi-percent" aria-hidden="true"></i>&nbsp;
+          Global Occupancy
+        </h2>
+      </div>
+    </div>
 
-<div class="row pl-3">
-  <div class="card text-white bg-info mb-3 mr-4 col-md-2 col-sm-12" id="week-global-occupancy">
-    <div class="card-header pl-1">
-      <h3 class="mb-0">
-        <i class="mdi mdi-calendar-week" aria-hidden="true"></i>&nbsp;
-        Week
-      </h3>
-    </div>
-    <div class="card-body pb-4 pl-1 pr-2">
-      <h1 class="card-title">
-        <%= @week_global_occupancy_rate %><small>%</small>
-      </h1>
-      <p class="card-text font-italic">in the next 7 days</p>
+    <div class="row pl-3">
+      <div class="card text-white bg-info mb-3 mr-4 col-md col-sm-12" id="week-global-occupancy">
+        <div class="card-header pl-1">
+          <h3 class="mb-0">
+            <i class="mdi mdi-calendar-week" aria-hidden="true"></i>&nbsp;
+            Week
+          </h3>
+        </div>
+        <div class="card-body pt-0 pb-4 pl-1 pr-2">
+          <h1 class="card-title">
+            <%= @week_global_occupancy_rate %><small>%</small>
+          </h1>
+          <p class="card-text font-italic mb-0">in the next 7 days</p>
+          <p class="card-text font-italic small">due to <%= pluralize(@week_total_reservations, 'reservation') %></p>
+        </div>
+      </div>
+
+      <div class="card text-white bg-info mb-3 mr-4 col-md col-sm-12" id="month-global-occupancy">
+        <div class="card-header pl-1">
+          <h3 class="mb-0">
+            <i class="mdi mdi-calendar-month" aria-hidden="true"></i>&nbsp;
+            Month
+          </h3>
+        </div>
+        <div class="card-body pt-0 pb-4 pl-1 pr-2">
+          <h1 class="card-title">
+            <%= @month_global_occupancy_rate %><small>%</small>
+          </h1>
+          <p class="card-text font-italic mb-0">in the next 30 days</p>
+          <p class="card-text font-italic small">due to <%= pluralize(@month_total_reservations, 'reservation') %></p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="card text-white bg-info mb-3 mr-4 col-md-2 col-sm-12" id="month-global-occupancy">
-    <div class="card-header pl-1">
-      <h3 class="mb-0">
-        <i class="mdi mdi-calendar-month" aria-hidden="true"></i>&nbsp;
-        Month
-      </h3>
+  <div class="offset-md-1 col-md-5 col-sm-12" id="search-global-occupancy">
+    <div class="row mt-5">
+      <div class="col pl-0">
+        <h2>
+          <i class="mdi mdi-percent" aria-hidden="true"></i>&nbsp;
+          Search Global Occupancy
+        </h2>
+      </div>
     </div>
-    <div class="card-body pb-4 pl-1 pr-2">
-      <h1 class="card-title">
-        <%= @month_global_occupancy_rate %><small>%</small>
-      </h1>
-      <p class="card-text font-italic">in the next 30 days</p>
-    </div>
+
+    <%= form_tag search_occupancy_rate_rooms_path, html: { id: 'occupancy-rate-form'}, method: :get, remote: true do %>
+      <div class="row align-items-end">
+        <div class="col-md col-sm pr-0">
+          <%= label_tag :end_date, 'From' %>
+          <%= date_field_tag :start_date, Date.current, class: 'form-control' %>
+        </div>
+
+        <div class="col-md col-sm pr-0">
+          <%= label_tag :end_date, 'To' %>
+          <%= date_field_tag :end_date, Date.tomorrow, class: 'form-control' %>
+        </div>
+        <div class="col-md col-sm pr-0">
+          <button class="btn btn-outline-success mdi mdi-magnify my-2 my-sm-0 float-right" type="submit">Search</button>
+        </div>
+      </div>
+    <% end %>
+
+    <section id="occupation-search-results">
+      <!-- _occupancy_rate_search_results.html.erb is rendered here via js -->
+    </section>
   </div>
 </div>
 

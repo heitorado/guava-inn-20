@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :rooms
+  resources :rooms do
+    get :search_occupancy_rate, on: :collection
+  end
   resources :reservations, only: [:new, :create, :destroy] do
     get :search, on: :collection
   end
